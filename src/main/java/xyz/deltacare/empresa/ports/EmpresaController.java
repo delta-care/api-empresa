@@ -14,12 +14,13 @@ import xyz.deltacare.empresa.ports.dto.EmpresaDTO;
 public class EmpresaController {
 
     private final EmpresaService empresaService;
+    private final ModelMapper modelMapper;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmpresaDTO criar(@RequestBody EmpresaDTO empresaDTO) {
-        Empresa empresa = Empresa.builder().cnpj(empresaDTO.getCnpj()).nome(empresaDTO.getNome()).build();
+        Empresa empresa = modelMapper.map(empresaDTO, Empresa.class);
         empresa = empresaService.save(empresa);
-        return EmpresaDTO.builder().id(empresa.getId()).nome(empresa.getNome()).cnpj(empresa.getCnpj()).build();
+        return modelMapper.map(empresa, EmpresaDTO.class);
     }
 }
