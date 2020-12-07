@@ -1,5 +1,6 @@
 package xyz.deltacare.empresa.application;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import xyz.deltacare.empresa.domain.Empresa;
+import xyz.deltacare.empresa.domain.exception.EmpresaException;
 import xyz.deltacare.empresa.ports.out.EmpresaRepository;
 
 import java.util.UUID;
@@ -25,7 +27,7 @@ public class EmpresaServiceTest {
     EmpresaRepository empresaRepository;
 
     @BeforeEach
-    public void setUp() {
+    public void setup() {
         this.empresaService = new EmpresaServiceImpl(empresaRepository);
     }
 
@@ -45,7 +47,13 @@ public class EmpresaServiceTest {
                 .nome("Golden")
                 .build();
 
-        Mockito.when(empresaRepository.save(empresa)).thenReturn(empresaCriadaBuild);
+        Mockito
+                .when(empresaRepository.existsByCnpj(empresa.getCnpj()))
+                .thenReturn(false);
+
+        Mockito
+                .when(empresaRepository.save(empresa))
+                .thenReturn(empresaCriadaBuild);
 
         // when | execução
         Empresa empresaCriada = empresaService.save(empresa);
@@ -55,5 +63,32 @@ public class EmpresaServiceTest {
         assertThat(empresaCriada.getCnpj()).isEqualTo("123");
         assertThat(empresaCriada.getNome()).isEqualTo("Golden");
 
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    public void criarEmpresaComCnpjExistente() {
+
+        // given | cenário
+        Empresa empresa = Empresa.builder()
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        Mockito
+                .when(empresaRepository.existsByCnpj(empresa.getCnpj()))
+                .thenReturn(true);
+
+        // when | execução
+        Throwable exception = Assertions.catchThrowable(() -> empresaService.save(empresa));
+
+        // then | verificação
+        assertThat(exception)
+                .isInstanceOf(EmpresaException.class)
+                .hasMessage("Empresa já cadastrada.");
+
+        Mockito
+                .verify(empresaRepository, Mockito.never())
+                .save(empresa);
     }
 }

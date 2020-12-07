@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports;
+package xyz.deltacare.empresa.ports.in;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -19,8 +19,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.application.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
+import xyz.deltacare.empresa.domain.exception.EmpresaException;
 import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -53,7 +55,7 @@ public class EmpresaControllerTest {
         String json = new ObjectMapper().writeValueAsString(empresaDTO);
 
         Empresa empresaCriada = Empresa.builder()
-                .id(UUID.fromString("75bc9277-862d-4379-901e-c37bae7d8af3"))
+                .id(UUID.randomUUID())
                 .cnpj("123")
                 .nome("Golden")
                 .build();
@@ -72,9 +74,9 @@ public class EmpresaControllerTest {
         // then | verificação
         perform
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value("75bc9277-862d-4379-901e-c37bae7d8af3"))
-                .andExpect(jsonPath("cnpj").value(empresaDTO.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresaDTO.getNome()));
+                .andExpect(jsonPath("id").value(empresaCriada.getId().toString()))
+                .andExpect(jsonPath("cnpj").value(empresaCriada.getCnpj()))
+                .andExpect(jsonPath("nome").value(empresaCriada.getNome()));
 
     }
 
@@ -97,5 +99,69 @@ public class EmpresaControllerTest {
         perform
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("errors", hasSize(2)));
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    public void criarEmpresaComCnpjExistente() throws Exception {
+
+        // given | cenário
+        EmpresaDTO empresaDTO = EmpresaDTO.builder()
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+        String json = new ObjectMapper().writeValueAsString(empresaDTO);
+
+        String mensagemDeErro = "Empresa já cadastrada.";
+        BDDMockito
+                .given(empresaService.save(Mockito.any(Empresa.class)))
+                .willThrow(new EmpresaException(mensagemDeErro));
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(EMPRESA_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors[0]").value(mensagemDeErro));
+
+    }
+
+    @Test
+    @DisplayName("Deve obter informações de uma empresa.")
+    public void obterInformacaoesDeEmpresa() throws Exception {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Empresa empresa = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        BDDMockito
+                .given(empresaService.getById(id))
+                .willReturn(Optional.of(empresa));
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(EMPRESA_API_URI.concat("/"+id))
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(empresa.getId().toString()))
+                .andExpect(jsonPath("cnpj").value(empresa.getCnpj()))
+                .andExpect(jsonPath("nome").value(empresa.getNome()));
+
     }
 }
