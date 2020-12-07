@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports;
+package xyz.deltacare.empresa.ports.in;
 
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.deltacare.empresa.application.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
-import xyz.deltacare.empresa.ports.dto.EmpresaDTO;
+import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 
 @RestController
 @RequestMapping("/empresas")

@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.application.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
-import xyz.deltacare.empresa.ports.dto.EmpresaDTO;
+import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 
 import java.util.UUID;
 
