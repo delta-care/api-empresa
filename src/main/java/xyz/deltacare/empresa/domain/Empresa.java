@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.dto;
+package xyz.deltacare.empresa.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,9 +9,9 @@ import java.util.UUID;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
-public class EmpresaDTO {
+@NoArgsConstructor
+public class Empresa {
     private UUID id;
     private String cnpj;
     private String nome;
