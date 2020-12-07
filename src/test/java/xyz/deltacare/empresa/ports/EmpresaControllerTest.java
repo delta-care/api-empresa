@@ -23,6 +23,7 @@ import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 
 import java.util.UUID;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class EmpresaControllerTest {
 
-    private static String EMPRESA_API_URI = "/empresas";
+    private static final String EMPRESA_API_URI = "/empresas";
 
     @Autowired
     MockMvc mockMvc;
@@ -78,6 +79,23 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve lançar validação quando não houver dados suficientes para criação de empresa.")
-    public void criarEmpresaInvalidaTest() {}
+    @DisplayName("Deve lançar erro quando não houver dados suficientes para criação de empresa.")
+    public void criarEmpresaInvalidaTest() throws Exception {
+
+        // given | cenário
+        String json = new ObjectMapper().writeValueAsString(new EmpresaDTO());
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(EMPRESA_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(2)));
+    }
 }

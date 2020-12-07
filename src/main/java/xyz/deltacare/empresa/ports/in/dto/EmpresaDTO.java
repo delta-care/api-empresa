@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.UUID;
 
 @Data
@@ -12,7 +13,13 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EmpresaDTO {
+
     private UUID id;
+
+    @NotEmpty
     private String cnpj;
+
+    @NotEmpty
     private String nome;
+
 }
