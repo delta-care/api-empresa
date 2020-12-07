@@ -1,7 +1,6 @@
 package xyz.deltacare.empresa.ports;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,14 +51,14 @@ public class EmpresaControllerTest {
                 .build();
         String json = new ObjectMapper().writeValueAsString(empresaDTO);
 
-        Empresa empresaSalva = Empresa.builder()
+        Empresa empresaCriada = Empresa.builder()
                 .id(UUID.fromString("75bc9277-862d-4379-901e-c37bae7d8af3"))
                 .cnpj("123")
                 .nome("Golden")
                 .build();
         BDDMockito
                 .given(empresaService.save(Mockito.any(Empresa.class)))
-                .willReturn(empresaSalva);
+                .willReturn(empresaCriada);
 
         // when | execução
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
