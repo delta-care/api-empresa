@@ -6,14 +6,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
 import xyz.deltacare.empresa.ports.out.EmpresaRepository;
 
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -118,6 +121,41 @@ public class EmpresaServiceTest {
         assertThat(empresaObtida.get().getId()).isEqualTo(empresaObtidaDoRepository.getId());
         assertThat(empresaObtida.get().getCnpj()).isEqualTo(empresaObtidaDoRepository.getCnpj());
         assertThat(empresaObtida.get().getNome()).isEqualTo(empresaObtidaDoRepository.getNome());
+
+    }
+
+    @Test
+    @DisplayName("OBTER: Deve obter empresa.")
+    @SuppressWarnings("unchecked")
+    public void obterEmpresa() {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Empresa empresa = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        List<Empresa> lista = Collections.singletonList(empresa);
+        PageRequest pageRequest = PageRequest.of(0, 10);
+        Page<Empresa> pageObtidaDoRepository = new PageImpl<>(
+                lista,
+                pageRequest, 1);
+
+        Mockito
+                .when(empresaRepository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+                .thenReturn(pageObtidaDoRepository);
+
+        // when | execução
+        Page<Empresa> result = empresaService.obter(empresa, pageRequest);
+
+        // then | verificação
+        assertThat(result.getTotalElements()).isEqualTo(1);
+        assertThat(result.getContent()).isEqualTo(lista);
+        assertThat(result.getPageable().getPageNumber()).isEqualTo(0);
+        assertThat(result.getPageable().getPageSize()).isEqualTo(10);
 
     }
 

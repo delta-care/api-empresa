@@ -1,5 +1,7 @@
 package xyz.deltacare.empresa.application;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import xyz.deltacare.empresa.domain.Empresa;
 
 import java.util.Optional;
@@ -10,4 +12,5 @@ public interface EmpresaService {
     Optional<Empresa> getById(UUID id);
     void excluir(Empresa empresa);
     Empresa atualizar(Empresa empresa);
+    Page<Empresa> obter (Empresa filter, Pageable pageRequest);
 }

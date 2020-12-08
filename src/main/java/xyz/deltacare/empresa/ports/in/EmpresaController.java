@@ -1,8 +1,10 @@
 package xyz.deltacare.empresa.ports.in;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,7 +17,9 @@ import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 import xyz.deltacare.empresa.ports.in.exception.ApiErrors;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/empresas")
@@ -39,6 +43,17 @@ public class EmpresaController {
                 .getById(id)
                 .map(empresa -> modelMapper.map(empresa, EmpresaDTO.class))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping()
+    public Page<EmpresaDTO> obter(EmpresaDTO empresaDTO, Pageable pageRequest) {
+        Empresa filter = modelMapper.map(empresaDTO, Empresa.class);
+        Page<Empresa> result = empresaService.obter(filter, pageRequest);
+        List<EmpresaDTO> list = result.getContent()
+                .stream()
+                .map(entity -> modelMapper.map(entity, EmpresaDTO.class))
+                .collect(Collectors.toList());
+        return new PageImpl<>(list, pageRequest, result.getTotalElements());
     }
 
     @PatchMapping("{id}")
