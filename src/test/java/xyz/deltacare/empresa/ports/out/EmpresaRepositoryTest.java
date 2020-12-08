@@ -2,7 +2,9 @@ package xyz.deltacare.empresa.ports.out;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -16,6 +18,7 @@ import static org.assertj.core.api.Assertions.*;
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @DataJpaTest
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 public class EmpresaRepositoryTest {
 
     @Autowired
@@ -25,7 +28,7 @@ public class EmpresaRepositoryTest {
     EmpresaRepository repository;
 
     @Test
-    @DisplayName("Deve retornar verdadeiro quando existir uma empresa com CNPJ informado.")
+    @DisplayName("EXISTIR: Deve retornar verdadeiro quando existir uma empresa com CNPJ informado.")
     public void retornaVerdadeiroQuandoExisteEmpresaCNPJInformado() {
 
         // given | cenário
@@ -45,7 +48,7 @@ public class EmpresaRepositoryTest {
     }
 
     @Test
-    @DisplayName("Deve retornar falso quando existir uma empresa com CNPJ informado.")
+    @DisplayName("EXISTIR: Deve retornar falso quando existir uma empresa com CNPJ informado.")
     public void retornaFalsoQuandoExisteEmpresaCNPJInformado() {
 
         // given | cenário
