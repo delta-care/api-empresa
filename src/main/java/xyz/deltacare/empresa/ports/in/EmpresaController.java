@@ -29,7 +29,7 @@ public class EmpresaController {
     @ResponseStatus(HttpStatus.CREATED)
     public EmpresaDTO criar(@RequestBody @Valid EmpresaDTO empresaDTO) {
         Empresa empresa = modelMapper.map(empresaDTO, Empresa.class);
-        empresa = empresaService.save(empresa);
+        empresa = empresaService.criar(empresa);
         return modelMapper.map(empresa, EmpresaDTO.class);
     }
 

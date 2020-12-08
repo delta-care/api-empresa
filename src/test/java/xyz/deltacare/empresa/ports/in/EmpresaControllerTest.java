@@ -45,7 +45,7 @@ public class EmpresaControllerTest {
 
     @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
-    public void criarEmpresaTest(TestInfo testInfo) throws Exception {
+    public void criarEmpresaTest() throws Exception {
 
         // given | cenário
         EmpresaDTO empresaDTO = EmpresaDTO.builder()
@@ -60,7 +60,7 @@ public class EmpresaControllerTest {
                 .nome("Golden")
                 .build();
         BDDMockito
-                .given(empresaService.save(Mockito.any(Empresa.class)))
+                .given(empresaService.criar(Mockito.any(Empresa.class)))
                 .willReturn(empresaCriada);
 
         // when | execução
@@ -113,7 +113,7 @@ public class EmpresaControllerTest {
 
         String mensagemDeErro = "Empresa já cadastrada.";
         BDDMockito
-                .given(empresaService.save(Mockito.any(Empresa.class)))
+                .given(empresaService.criar(Mockito.any(Empresa.class)))
                 .willThrow(new EmpresaException(mensagemDeErro));
 
         // when | execução
