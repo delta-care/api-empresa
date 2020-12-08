@@ -135,7 +135,7 @@ public class EmpresaControllerTest {
 
     @Test
     @DisplayName("Deve obter informações de uma empresa.")
-    public void obterInformacaoesDeEmpresa() throws Exception {
+    public void obterInformacoesDeEmpresa() throws Exception {
 
         // given | cenário
         UUID id = UUID.randomUUID();
@@ -162,6 +162,167 @@ public class EmpresaControllerTest {
                 .andExpect(jsonPath("id").value(empresa.getId().toString()))
                 .andExpect(jsonPath("cnpj").value(empresa.getCnpj()))
                 .andExpect(jsonPath("nome").value(empresa.getNome()));
+
+    }
+
+    @Test
+    @DisplayName("Deve retornar código not found quando tentar obter empresa com CNPJ inexistente.")
+    public void obterEmpresaCnpjInexistente() throws Exception {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        BDDMockito
+                .given(empresaService.getById(id))
+                .willReturn(Optional.empty());
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(EMPRESA_API_URI.concat("/"+id))
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @DisplayName("Deve excluir uma empresa.")
+    public void excluirEmpresa() throws Exception {
+
+        // given | cenário
+        Empresa empresa = Empresa.builder()
+                .id(UUID.randomUUID())
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        BDDMockito
+                .given(empresaService.getById(empresa.getId()))
+                .willReturn(Optional.of(empresa));
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .delete(EMPRESA_API_URI.concat("/"+empresa.getId()))
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    @DisplayName("Deve excluir uma empresa com CNPJ inexistente.")
+    public void excluirEmpresaComCnpjInexistente() throws Exception {
+
+        // given | cenário
+        Empresa empresa = Empresa.builder()
+                .id(UUID.randomUUID())
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        BDDMockito
+                .given(empresaService.getById(empresa.getId()))
+                .willReturn(Optional.empty());
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .delete(EMPRESA_API_URI.concat("/"+empresa.getId()))
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @DisplayName("Deve atualizar nome de uma empresa.")
+    public void atualizarNomeDeEmpresa() throws Exception {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        EmpresaDTO empresaEnviada = EmpresaDTO.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+        String jsonEnviado = new ObjectMapper().writeValueAsString(empresaEnviada);
+
+        Empresa empresaExistente = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+        BDDMockito
+                .given(empresaService.getById(id))
+                .willReturn(Optional.of(empresaExistente));
+
+        Empresa empresaASerAtualizada = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+        Empresa empresaAtualizada = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden Cross")
+                .build();
+        BDDMockito
+                .given(empresaService.atualizar(empresaASerAtualizada))
+                .willReturn(empresaAtualizada);
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .patch(EMPRESA_API_URI.concat("/"+id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(jsonEnviado);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("nome").value(empresaAtualizada.getNome()));
+
+    }
+
+    @Test
+    @DisplayName("Deve retornar código not found quando tentar atualizar empresa com CNPJ inexistente.")
+    public void atualizarEmpresaCnpjInexistente() throws Exception {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Empresa empresaEnviada = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden Cross")
+                .build();
+        String jsonEnviado = new ObjectMapper().writeValueAsString(empresaEnviada);
+
+        BDDMockito
+                .given(empresaService.getById(id))
+                .willReturn(Optional.empty());
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .patch(EMPRESA_API_URI.concat("/"+id))
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(jsonEnviado);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isNotFound());
 
     }
 }

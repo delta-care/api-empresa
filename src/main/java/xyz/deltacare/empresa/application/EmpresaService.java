@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public interface EmpresaService {
     Empresa save(Empresa any);
-
     Optional<Empresa> getById(UUID id);
+    void excluir(Empresa empresa);
+    Empresa atualizar(Empresa empresa);
 }

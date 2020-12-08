@@ -30,4 +30,14 @@ public class EmpresaServiceImpl implements EmpresaService {
         return this.repository.findById(id);
     }
 
+    @Override
+    public void excluir(Empresa empresa) {
+
+    }
+
+    @Override
+    public Empresa atualizar(Empresa empresa) {
+        return null;
+    }
+
 }

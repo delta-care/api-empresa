@@ -1,11 +1,13 @@
 package xyz.deltacare.empresa.ports.in;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import xyz.deltacare.empresa.application.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
@@ -32,9 +34,31 @@ public class EmpresaController {
     }
 
     @GetMapping("{id}")
-    public EmpresaDTO get(@PathVariable UUID id) {
-        Empresa empresa = empresaService.getById(id).orElse(null);
-        return modelMapper.map(empresa, EmpresaDTO.class);
+    public EmpresaDTO obter(@PathVariable UUID id) {
+        return empresaService
+                .getById(id)
+                .map(empresa -> modelMapper.map(empresa, EmpresaDTO.class))
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @PatchMapping("{id}")
+    public EmpresaDTO atualizar(@PathVariable UUID id, @RequestBody EmpresaDTO empresaDTO) {
+        return empresaService
+                .getById(id)
+                .map(empresa -> {
+                    empresa.setNome(empresaDTO.getNome());
+                    empresa = empresaService.atualizar(empresa);
+                    return modelMapper.map(empresa, EmpresaDTO.class);
+                }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+    }
+
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void excluir(@PathVariable UUID id) {
+        Empresa empresa = empresaService
+                .getById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        empresaService.excluir(empresa);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
