@@ -1,8 +1,7 @@
 package xyz.deltacare.empresa.ports.in;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
@@ -33,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("test")
 @WebMvcTest
 @AutoConfigureMockMvc
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 public class EmpresaControllerTest {
 
     private static final String EMPRESA_API_URI = "/empresas";
@@ -44,7 +44,7 @@ public class EmpresaControllerTest {
     EmpresaService empresaService;
 
     @Test
-    @DisplayName("Deve criar uma empresa com sucesso.")
+    @DisplayName("POST: Deve criar uma empresa.")
     public void criarEmpresaTest() throws Exception {
 
         // given | cenário
@@ -77,11 +77,10 @@ public class EmpresaControllerTest {
                 .andExpect(jsonPath("id").value(empresaCriada.getId().toString()))
                 .andExpect(jsonPath("cnpj").value(empresaCriada.getCnpj()))
                 .andExpect(jsonPath("nome").value(empresaCriada.getNome()));
-
     }
 
     @Test
-    @DisplayName("Deve lançar erro quando não houver dados suficientes para criação de empresa.")
+    @DisplayName("POST: Deve lançar erro quando não houver dados suficientes para criação de empresa.")
     public void criarEmpresaInvalidaTest() throws Exception {
 
         // given | cenário
@@ -102,7 +101,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    @DisplayName("POST: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
     public void criarEmpresaComCnpjExistente() throws Exception {
 
         // given | cenário
@@ -134,7 +133,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve obter informações de uma empresa.")
+    @DisplayName("GET: Deve obter informações de uma empresa.")
     public void obterInformacoesDeEmpresa() throws Exception {
 
         // given | cenário
@@ -166,7 +165,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve retornar código not found quando tentar obter empresa com CNPJ inexistente.")
+    @DisplayName("GET: Deve retornar código not found quando tentar obter empresa com CNPJ inexistente.")
     public void obterEmpresaCnpjInexistente() throws Exception {
 
         // given | cenário
@@ -189,7 +188,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve excluir uma empresa.")
+    @DisplayName("DELETE: Deve excluir uma empresa.")
     public void excluirEmpresa() throws Exception {
 
         // given | cenário
@@ -216,7 +215,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve excluir uma empresa com CNPJ inexistente.")
+    @DisplayName("DELETE: Deve excluir uma empresa com CNPJ inexistente.")
     public void excluirEmpresaComCnpjInexistente() throws Exception {
 
         // given | cenário
@@ -243,7 +242,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve atualizar nome de uma empresa.")
+    @DisplayName("PATCH: Deve atualizar nome de uma empresa.")
     public void atualizarNomeDeEmpresa() throws Exception {
 
         // given | cenário
@@ -295,7 +294,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("Deve retornar código not found quando tentar atualizar empresa com CNPJ inexistente.")
+    @DisplayName("PATCH: Deve retornar código not found quando tentar atualizar empresa com CNPJ inexistente.")
     public void atualizarEmpresaCnpjInexistente() throws Exception {
 
         // given | cenário
