@@ -6,12 +6,16 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import xyz.deltacare.empresa.domain.Empresa;
+
+import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -64,6 +68,43 @@ public class EmpresaRepositoryTest {
 
         // then | verificação
         assertThat(exists).isFalse();
+
+    }
+
+    @Test
+    @DisplayName("OBTER: Deve obter uma empresa por id.")
+    public void obterEmpresaPorId() {
+
+        // given | cenário
+        Empresa empresaPersistida = Empresa.builder()
+                .cnpj("321")
+                .nome("Golden")
+                .build();
+        entityManager.persist(empresaPersistida);
+
+        // when | execução
+        Optional<Empresa> empresaObtida = repository.findById(empresaPersistida.getId());
+
+        // then | verificação
+        assertThat(empresaObtida.isPresent()).isTrue();
+        assertThat(empresaObtida.get().getId()).isEqualTo(empresaPersistida.getId());
+        assertThat(empresaObtida.get().getCnpj()).isEqualTo(empresaPersistida.getCnpj());
+        assertThat(empresaObtida.get().getNome()).isEqualTo(empresaPersistida.getNome());
+
+    }
+
+    @Test
+    @DisplayName("OBTER: Deve retornar false quando obter uma empresa por id inexistente.")
+    public void obterEmpresaIdInexistente() {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        // when | execução
+        Optional<Empresa> empresaObtida = repository.findById(id);
+
+        // then | verificação
+        assertThat(empresaObtida.isPresent()).isFalse();
 
     }
 }
