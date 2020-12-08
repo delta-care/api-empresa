@@ -55,7 +55,7 @@ public class EmpresaServiceTest {
                 .thenReturn(empresaCriadaBuild);
 
         // when | execução
-        Empresa empresaCriada = empresaService.save(empresa);
+        Empresa empresaCriada = empresaService.criar(empresa);
 
         // then | verificação
         assertThat(empresaCriada.getId()).isEqualTo(UUID.fromString("75bc9277-862d-4379-901e-c37bae7d8af3"));
@@ -79,7 +79,7 @@ public class EmpresaServiceTest {
                 .thenReturn(true);
 
         // when | execução
-        Throwable exception = Assertions.catchThrowable(() -> empresaService.save(empresa));
+        Throwable exception = Assertions.catchThrowable(() -> empresaService.criar(empresa));
 
         // then | verificação
         assertThat(exception)

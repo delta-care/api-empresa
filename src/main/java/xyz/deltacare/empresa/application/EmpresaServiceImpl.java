@@ -18,7 +18,7 @@ public class EmpresaServiceImpl implements EmpresaService {
     }
 
     @Override
-    public Empresa save(Empresa empresa) {
+    public Empresa criar(Empresa empresa) {
         if (repository.existsByCnpj(empresa.getCnpj())) {
             throw new EmpresaException("Empresa já cadastrada.");
         }
