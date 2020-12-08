@@ -1,20 +1,29 @@
 package xyz.deltacare.empresa.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
+import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 import xyz.deltacare.empresa.ports.out.EmpresaRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -136,6 +145,130 @@ public class EmpresaServiceTest {
 
         // then | verificação
         assertThat(empresaObtida.isPresent()).isFalse();
+
+    }
+
+    @Test
+    @DisplayName("EXCLUIR: Deve excluir uma empresa.")
+    public void excluirEmpresa() {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Empresa empresa = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        // when | execução
+        empresaService.excluir(empresa);
+
+        // then | verificação
+        Mockito
+                .verify(empresaRepository, Mockito.times(1))
+                .delete(empresa);
+
+    }
+
+    @Test
+    @DisplayName("EXCLUIR: Deve lançar erro ao tentar excluir empresa que id inexistente.")
+    public void excluirEmpresaIdInexistente() {
+
+        // given | cenário
+        Empresa empresa = Empresa.builder()
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        // when | execução
+        Throwable exception = Assertions.catchThrowable(() -> empresaService.excluir(empresa));
+
+        // then | verificação
+        assertThat(exception)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Id da empresa inexistente.");
+
+        Mockito
+                .verify(empresaRepository, Mockito.never())
+                .save(empresa);
+
+    }
+
+    @Test
+    @DisplayName("ATUALIZAR: Deve atualizar uma empresa.")
+    public void atualizarEmpresa() {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Empresa empresa = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        // when | execução
+        empresaService.atualizar(empresa);
+
+        // then | verificação
+        Mockito
+                .verify(empresaRepository, Mockito.times(1))
+                .save(empresa);
+
+    }
+
+    @Test
+    @DisplayName("ATUALIZAR: Deve lançar erro ao tentar atualizar empresa que id inexistente.")
+    public void atualizarEmpresaIdInexistente() {
+
+        // given | cenário
+        Empresa empresa = Empresa.builder()
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        // when | execução
+        Throwable exception = Assertions.catchThrowable(() -> empresaService.atualizar(empresa));
+
+        // then | verificação
+        assertThat(exception)
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Id da empresa inexistente.");
+
+        Mockito
+                .verify(empresaRepository, Mockito.never())
+                .save(empresa);
+
+    }
+
+    @Test
+    @DisplayName("ATUALIZAR: Deve atualizar nome de uma empresa.")
+    public void atualizarNomeDeEmpresa() {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Empresa empresaASerAtualizada = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        Empresa empresaAtualizadaRepository = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden Cross")
+                .build();
+        BDDMockito
+                .given(empresaRepository.save(empresaASerAtualizada))
+                .willReturn(empresaAtualizadaRepository);
+
+        // when | execução
+        Empresa empresaAtualizada = empresaService.atualizar(empresaASerAtualizada);
+
+        // then | verificação
+        assertThat(empresaAtualizada.getNome()).isEqualTo(empresaAtualizadaRepository.getNome());
 
     }
 }

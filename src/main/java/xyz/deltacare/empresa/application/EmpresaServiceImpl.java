@@ -11,7 +11,7 @@ import java.util.UUID;
 @Service
 public class EmpresaServiceImpl implements EmpresaService {
 
-    private EmpresaRepository repository;
+    private final EmpresaRepository repository;
 
     public EmpresaServiceImpl(EmpresaRepository repository) {
         this.repository = repository;
@@ -32,12 +32,16 @@ public class EmpresaServiceImpl implements EmpresaService {
 
     @Override
     public void excluir(Empresa empresa) {
-
+        if ((empresa == null) || (empresa.getId() == null))
+            throw new IllegalArgumentException("Id da empresa inexistente.");
+        this.repository.delete(empresa);
     }
 
     @Override
     public Empresa atualizar(Empresa empresa) {
-        return null;
+        if ((empresa == null) || (empresa.getId() == null))
+            throw new IllegalArgumentException("Id da empresa inexistente.");
+        return this.repository.save(empresa);
     }
 
 }
