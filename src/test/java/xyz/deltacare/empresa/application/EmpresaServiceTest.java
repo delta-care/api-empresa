@@ -1,9 +1,7 @@
 package xyz.deltacare.empresa.application;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 public class EmpresaServiceTest {
 
     EmpresaService empresaService;
@@ -32,7 +31,7 @@ public class EmpresaServiceTest {
     }
 
     @Test
-    @DisplayName("Deve criar uma empresa com sucesso.")
+    @DisplayName("CRIAR: Deve criar uma empresa com sucesso.")
     public void criarEmpresaTest() {
 
         // given | cenário
@@ -66,7 +65,7 @@ public class EmpresaServiceTest {
     }
 
     @Test
-    @DisplayName("Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
     public void criarEmpresaComCnpjExistente() {
 
         // given | cenário
