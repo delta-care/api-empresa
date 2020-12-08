@@ -1,5 +1,9 @@
 package xyz.deltacare.empresa.ports.in;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
@@ -24,11 +28,16 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/empresas")
 @RequiredArgsConstructor
+@Api("API de Empresa")
 public class EmpresaController {
 
     private final EmpresaService empresaService;
     private final ModelMapper modelMapper;
 
+    @ApiOperation(value = "Cria uma empresa")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Empresa criada")
+    })
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public EmpresaDTO criar(@RequestBody @Valid EmpresaDTO empresaDTO) {
