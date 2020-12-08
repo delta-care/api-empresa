@@ -11,6 +11,7 @@ import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
 import xyz.deltacare.empresa.ports.out.EmpresaRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -89,5 +90,52 @@ public class EmpresaServiceTest {
         Mockito
                 .verify(empresaRepository, Mockito.never())
                 .save(empresa);
+    }
+
+    @Test
+    @DisplayName("OBTER: Deve obter uma empresa por id.")
+    public void obterEmpresaPorId() {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Empresa empresaObtidaDoRepository = Empresa.builder()
+                .id(id)
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        Mockito
+                .when(empresaRepository.findById(id))
+                .thenReturn(Optional.of(empresaObtidaDoRepository));
+
+        // when | execução
+        Optional<Empresa> empresaObtida = empresaService.getById(id);
+
+        // then | verificação
+        assertThat(empresaObtida.isPresent()).isTrue();
+        assertThat(empresaObtida.get().getId()).isEqualTo(empresaObtidaDoRepository.getId());
+        assertThat(empresaObtida.get().getCnpj()).isEqualTo(empresaObtidaDoRepository.getCnpj());
+        assertThat(empresaObtida.get().getNome()).isEqualTo(empresaObtidaDoRepository.getNome());
+
+    }
+
+    @Test
+    @DisplayName("OBTER: Deve retornar false quando obter uma empresa por id inexistente.")
+    public void obterEmpresaIdInexistente() {
+
+        // given | cenário
+        UUID id = UUID.randomUUID();
+
+        Mockito
+                .when(empresaRepository.findById(id))
+                .thenReturn(Optional.empty());
+
+        // when | execução
+        Optional<Empresa> empresaObtida = empresaService.getById(id);
+
+        // then | verificação
+        assertThat(empresaObtida.isPresent()).isFalse();
+
     }
 }
