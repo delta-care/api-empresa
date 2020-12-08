@@ -165,8 +165,8 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("OBTER: Deve retornar código not found quando tentar obter empresa com CNPJ inexistente.")
-    public void obterEmpresaCnpjInexistente() throws Exception {
+    @DisplayName("OBTER: Deve retornar código not found quando tentar obter empresa com id inexistente.")
+    public void obterEmpresaIdInexistente() throws Exception {
 
         // given | cenário
         UUID id = UUID.randomUUID();
