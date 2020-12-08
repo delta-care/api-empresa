@@ -57,7 +57,7 @@ public class EmpresaController {
     }
 
     @PatchMapping("{id}")
-    public EmpresaDTO atualizar(@PathVariable UUID id, @RequestBody EmpresaDTO empresaDTO) {
+    public EmpresaDTO atualizar(@PathVariable UUID id, @RequestBody @Valid EmpresaDTO empresaDTO) {
         return empresaService
                 .getById(id)
                 .map(empresa -> {
