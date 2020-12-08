@@ -44,8 +44,8 @@ public class EmpresaControllerTest {
     EmpresaService empresaService;
 
     @Test
-    @DisplayName("POST: Deve criar uma empresa.")
-    public void criarEmpresaTest() throws Exception {
+    @DisplayName("CRIAR: Deve criar uma empresa.")
+    public void criarEmpresaTest(TestInfo testInfo) throws Exception {
 
         // given | cenário
         EmpresaDTO empresaDTO = EmpresaDTO.builder()
@@ -80,7 +80,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("POST: Deve lançar erro quando não houver dados suficientes para criação de empresa.")
+    @DisplayName("CRIAR: Deve lançar erro quando não houver dados suficientes para criação de empresa.")
     public void criarEmpresaInvalidaTest() throws Exception {
 
         // given | cenário
@@ -101,7 +101,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("POST: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
     public void criarEmpresaComCnpjExistente() throws Exception {
 
         // given | cenário
@@ -133,7 +133,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("GET: Deve obter informações de uma empresa.")
+    @DisplayName("OBTER: Deve obter informações de uma empresa.")
     public void obterInformacoesDeEmpresa() throws Exception {
 
         // given | cenário
@@ -165,7 +165,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("GET: Deve retornar código not found quando tentar obter empresa com CNPJ inexistente.")
+    @DisplayName("OBTER: Deve retornar código not found quando tentar obter empresa com CNPJ inexistente.")
     public void obterEmpresaCnpjInexistente() throws Exception {
 
         // given | cenário
@@ -188,7 +188,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE: Deve excluir uma empresa.")
+    @DisplayName("EXCLUIR: Deve excluir uma empresa.")
     public void excluirEmpresa() throws Exception {
 
         // given | cenário
@@ -215,7 +215,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("DELETE: Deve excluir uma empresa com CNPJ inexistente.")
+    @DisplayName("EXCLUIR: Deve excluir uma empresa com CNPJ inexistente.")
     public void excluirEmpresaComCnpjInexistente() throws Exception {
 
         // given | cenário
@@ -242,7 +242,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("PATCH: Deve atualizar nome de uma empresa.")
+    @DisplayName("ATUALIZAR: Deve atualizar nome de uma empresa.")
     public void atualizarNomeDeEmpresa() throws Exception {
 
         // given | cenário
@@ -294,7 +294,7 @@ public class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("PATCH: Deve retornar código not found quando tentar atualizar empresa com CNPJ inexistente.")
+    @DisplayName("ATUALIZAR: Deve retornar código not found quando tentar atualizar empresa com CNPJ inexistente.")
     public void atualizarEmpresaCnpjInexistente() throws Exception {
 
         // given | cenário
