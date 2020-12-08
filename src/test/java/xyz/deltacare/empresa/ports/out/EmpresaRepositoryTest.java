@@ -1,12 +1,10 @@
 package xyz.deltacare.empresa.ports.out;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -105,6 +103,46 @@ public class EmpresaRepositoryTest {
 
         // then | verificação
         assertThat(empresaObtida.isPresent()).isFalse();
+
+    }
+
+    @Test
+    @DisplayName("EXCLUIR: Deve excluir uma empresa.")
+    public void excluirEmpresa() {
+
+        // given | cenário
+        Empresa empresaPersistida = Empresa.builder()
+                .cnpj("321")
+                .nome("Golden")
+                .build();
+        entityManager.persist(empresaPersistida);
+
+        Empresa empresaEncontrada = entityManager.find(Empresa.class, empresaPersistida.getId());
+
+        // when | execução
+        repository.delete(empresaEncontrada);
+
+        // then | verificação
+        Empresa empresaExcluida = entityManager.find(Empresa.class, empresaPersistida.getId());
+        assertThat(empresaExcluida).isNull();
+
+    }
+
+    @Test
+    @DisplayName("CRIAR: Deve criar uma empresa.")
+    public void criarEmpresa() {
+
+        // given | cenário
+        Empresa empresa = Empresa.builder()
+                .cnpj("123")
+                .nome("Golden")
+                .build();
+
+        // when | execução
+        Empresa empresaSalva = repository.save(empresa);
+
+        // then | verificação
+        assertThat(empresaSalva.getId()).isNotNull();
 
     }
 }
