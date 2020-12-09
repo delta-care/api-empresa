@@ -1,29 +1,29 @@
 package xyz.deltacare.empresa.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
+import xyz.deltacare.empresa.domain.audit.Auditable;
 
 import javax.persistence.*;
 import java.util.UUID;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table
-public class Empresa {
+@NoArgsConstructor
+@Data
+@SuperBuilder
+public class Empresa extends Auditable {
 
     @Id
     @Column
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
-    @Column
+    @Column(nullable = false, unique = true)
     private String cnpj;
 
-    @Column
+    @Column(nullable = false)
     private String nome;
+
 }

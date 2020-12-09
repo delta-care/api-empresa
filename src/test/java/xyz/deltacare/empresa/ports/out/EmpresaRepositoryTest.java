@@ -12,6 +12,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import xyz.deltacare.empresa.domain.Empresa;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,6 +39,7 @@ public class EmpresaRepositoryTest {
         Empresa empresa = Empresa.builder()
                 .cnpj("123")
                 .nome("Golden")
+                .createdDate(LocalDateTime.now())
                 .build();
         entityManager.persist(empresa);
 
@@ -58,6 +60,7 @@ public class EmpresaRepositoryTest {
         Empresa empresa = Empresa.builder()
                 .cnpj("321")
                 .nome("Golden")
+                .createdDate(LocalDateTime.now())
                 .build();
         entityManager.persist(empresa);
 
@@ -114,6 +117,7 @@ public class EmpresaRepositoryTest {
         Empresa empresaPersistida = Empresa.builder()
                 .cnpj("123")
                 .nome("Golden")
+                .createdDate(LocalDateTime.now())
                 .build();
         entityManager.persist(empresaPersistida);
 
