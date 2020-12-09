@@ -112,7 +112,7 @@ public class EmpresaRepositoryTest {
 
         // given | cenário
         Empresa empresaPersistida = Empresa.builder()
-                .cnpj("321")
+                .cnpj("123")
                 .nome("Golden")
                 .build();
         entityManager.persist(empresaPersistida);
