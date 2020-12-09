@@ -146,7 +146,7 @@ public class EmpresaControllerTest {
 
         Empresa empresa = Empresa.builder()
                 .id(id)
-                .cnpj("123")
+                .cnpj("321")
                 .nome("Golden")
                 .build();
 
