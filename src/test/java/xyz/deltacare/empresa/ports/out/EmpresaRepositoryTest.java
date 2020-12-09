@@ -124,7 +124,7 @@ public class EmpresaRepositoryTest {
 
         // then | verificação
         Empresa empresaExcluida = entityManager.find(Empresa.class, empresaPersistida.getId());
-        assertThat(empresaExcluida).isNull();
+        assertThat(empresaExcluida).isNotNull();
 
     }
 
