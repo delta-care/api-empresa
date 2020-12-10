@@ -7,12 +7,12 @@ import xyz.deltacare.empresa.domain.audit.Auditable;
 import javax.persistence.*;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
-@Entity
-@Table
-@NoArgsConstructor
 @Data
+@Table
+@Entity
 @SuperBuilder
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Empresa extends Auditable {
 
     @Id
