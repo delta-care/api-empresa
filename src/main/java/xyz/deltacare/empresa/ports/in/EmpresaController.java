@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -14,9 +16,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
-import xyz.deltacare.empresa.application.EmpresaService;
+import xyz.deltacare.empresa.service.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
+import xyz.deltacare.empresa.ports.in.docs.EmpresaControllerDocs;
 import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 import xyz.deltacare.empresa.ports.in.exception.ApiErrors;
 
@@ -26,13 +29,19 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/empresas")
-@RequiredArgsConstructor
-@Api("API de Empresa")
-public class EmpresaController {
+@RequestMapping("/v1/empresas")
+public class EmpresaController implements EmpresaControllerDocs {
 
     private final EmpresaService empresaService;
     private final ModelMapper modelMapper;
+
+    @Autowired
+    public EmpresaController(
+            @Qualifier("empresaServiceImpl") EmpresaService empresaService,
+            ModelMapper modelMapper) {
+        this.empresaService = empresaService;
+        this.modelMapper = modelMapper;
+    }
 
     @ApiOperation(value = "Cria uma empresa")
     @ApiResponses(value = {

@@ -1,10 +1,9 @@
-package xyz.deltacare.empresa.application;
+package xyz.deltacare.empresa.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
-import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -19,6 +18,7 @@ import xyz.deltacare.empresa.ports.out.EmpresaRepository;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
@@ -31,7 +31,7 @@ public class EmpresaServiceTest {
     EmpresaRepository empresaRepository;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         this.empresaService = new EmpresaServiceImpl(empresaRepository);
     }
 
@@ -40,32 +40,25 @@ public class EmpresaServiceTest {
     public void criarEmpresaTest() {
 
         // given | cenário
-        Empresa empresa = Empresa.builder()
-                .cnpj("123")
-                .nome("Golden")
+        Empresa empresaEnviada = Empresa.builder()
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
                 .build();
-
-        Empresa empresaCriadaBuild = Empresa.builder()
-                .id(UUID.fromString("75bc9277-862d-4379-901e-c37bae7d8af3"))
-                .cnpj("123")
-                .nome("Golden")
+        Empresa empresaEsperada = Empresa.builder()
+                .id(UUID.randomUUID())
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
                 .build();
-
-        Mockito
-                .when(empresaRepository.existsByCnpj(empresa.getCnpj()))
-                .thenReturn(false);
-
-        Mockito
-                .when(empresaRepository.save(empresa))
-                .thenReturn(empresaCriadaBuild);
 
         // when | execução
-        Empresa empresaCriada = empresaService.criar(empresa);
+        when(empresaRepository.existsByCnpj(empresaEnviada.getCnpj())).thenReturn(false);
+        when(empresaRepository.save(empresaEnviada)).thenReturn(empresaEsperada);
+        Empresa empresaCriada = empresaService.criar(empresaEnviada);
 
         // then | verificação
-        assertThat(empresaCriada.getId()).isEqualTo(UUID.fromString("75bc9277-862d-4379-901e-c37bae7d8af3"));
-        assertThat(empresaCriada.getCnpj()).isEqualTo("123");
-        assertThat(empresaCriada.getNome()).isEqualTo("Golden");
+        assertThat(empresaCriada.getId()).isEqualTo(empresaEsperada.getId());
+        assertThat(empresaCriada.getCnpj()).isEqualTo(empresaEsperada.getCnpj());
+        assertThat(empresaCriada.getNome()).isEqualTo(empresaEsperada.getNome());
 
     }
 
@@ -79,8 +72,7 @@ public class EmpresaServiceTest {
                 .nome("Golden")
                 .build();
 
-        Mockito
-                .when(empresaRepository.existsByCnpj(empresa.getCnpj()))
+        when(empresaRepository.existsByCnpj(empresa.getCnpj()))
                 .thenReturn(true);
 
         // when | execução
@@ -91,8 +83,7 @@ public class EmpresaServiceTest {
                 .isInstanceOf(EmpresaException.class)
                 .hasMessage("Empresa já cadastrada.");
 
-        Mockito
-                .verify(empresaRepository, Mockito.never())
+        verify(empresaRepository, never())
                 .save(empresa);
     }
 
@@ -109,8 +100,7 @@ public class EmpresaServiceTest {
                 .nome("Golden")
                 .build();
 
-        Mockito
-                .when(empresaRepository.findById(id))
+        when(empresaRepository.findById(id))
                 .thenReturn(Optional.of(empresaObtidaDoRepository));
 
         // when | execução
@@ -144,8 +134,7 @@ public class EmpresaServiceTest {
                 lista,
                 pageRequest, 1);
 
-        Mockito
-                .when(empresaRepository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+        when(empresaRepository.findAll(any(Example.class), any(PageRequest.class)))
                 .thenReturn(pageObtidaDoRepository);
 
         // when | execução
@@ -166,8 +155,7 @@ public class EmpresaServiceTest {
         // given | cenário
         UUID id = UUID.randomUUID();
 
-        Mockito
-                .when(empresaRepository.findById(id))
+        when(empresaRepository.findById(id))
                 .thenReturn(Optional.empty());
 
         // when | execução
@@ -195,8 +183,7 @@ public class EmpresaServiceTest {
         empresaService.excluir(empresa);
 
         // then | verificação
-        Mockito
-                .verify(empresaRepository, Mockito.times(1))
+        verify(empresaRepository, times(1))
                 .delete(empresa);
 
     }
@@ -219,8 +206,7 @@ public class EmpresaServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Id da empresa inexistente.");
 
-        Mockito
-                .verify(empresaRepository, Mockito.never())
+        verify(empresaRepository, never())
                 .save(empresa);
 
     }
@@ -242,8 +228,7 @@ public class EmpresaServiceTest {
         empresaService.atualizar(empresa);
 
         // then | verificação
-        Mockito
-                .verify(empresaRepository, Mockito.times(1))
+        verify(empresaRepository, times(1))
                 .save(empresa);
 
     }
@@ -266,8 +251,7 @@ public class EmpresaServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Id da empresa inexistente.");
 
-        Mockito
-                .verify(empresaRepository, Mockito.never())
+        verify(empresaRepository, never())
                 .save(empresa);
 
     }

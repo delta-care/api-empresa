@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -20,11 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import xyz.deltacare.empresa.application.EmpresaService;
+import xyz.deltacare.empresa.service.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
 import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
@@ -40,12 +42,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 public class EmpresaControllerTest {
 
-    private static final String EMPRESA_API_URI = "/empresas";
+    private static final String EMPRESA_API_URI = "/v1/empresas";
 
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
+    @Qualifier("empresaServiceImpl")
     EmpresaService empresaService;
 
     @Test
@@ -63,6 +66,7 @@ public class EmpresaControllerTest {
                 .id(UUID.randomUUID())
                 .cnpj("123")
                 .nome("Golden")
+                .createdDate(LocalDateTime.now())
                 .build();
         BDDMockito
                 .given(empresaService.criar(Mockito.any(Empresa.class)))
@@ -102,7 +106,7 @@ public class EmpresaControllerTest {
         // then | verificação
         perform
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errors", hasSize(2)));
+                .andExpect(jsonPath("errors", hasSize(4)));
     }
 
     @Test

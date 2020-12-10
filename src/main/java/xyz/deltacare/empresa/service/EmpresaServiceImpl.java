@@ -1,5 +1,6 @@
-package xyz.deltacare.empresa.application;
+package xyz.deltacare.empresa.service;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.Page;
@@ -9,11 +10,11 @@ import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
 import xyz.deltacare.empresa.ports.out.EmpresaRepository;
 
-import java.awt.print.Book;
 import java.util.Optional;
 import java.util.UUID;
 
-@Service
+@Service()
+@Qualifier("empresaServiceImpl")
 public class EmpresaServiceImpl implements EmpresaService {
 
     private final EmpresaRepository repository;
