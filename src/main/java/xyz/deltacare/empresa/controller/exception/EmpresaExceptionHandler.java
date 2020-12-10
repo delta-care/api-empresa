@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.in.exception;
+package xyz.deltacare.empresa.controller.exception;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import xyz.deltacare.empresa.ports.in.dto.ErroDTO;
+import xyz.deltacare.empresa.controller.dto.ErroDTO;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;

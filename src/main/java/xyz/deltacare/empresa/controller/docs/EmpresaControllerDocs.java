@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.in.docs;
+package xyz.deltacare.empresa.controller.docs;
 
 import io.swagger.annotations.Api;
 

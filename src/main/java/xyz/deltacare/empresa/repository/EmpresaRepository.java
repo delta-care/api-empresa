@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.out;
+package xyz.deltacare.empresa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.deltacare.empresa.domain.Empresa;

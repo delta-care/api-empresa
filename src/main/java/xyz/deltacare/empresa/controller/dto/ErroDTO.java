@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.in.dto;
+package xyz.deltacare.empresa.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

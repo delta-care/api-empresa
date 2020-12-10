@@ -13,7 +13,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
-import xyz.deltacare.empresa.ports.out.EmpresaRepository;
+import xyz.deltacare.empresa.repository.EmpresaRepository;
 
 import java.util.*;
 

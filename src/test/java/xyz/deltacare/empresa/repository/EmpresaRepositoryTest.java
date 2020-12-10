@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.out;
+package xyz.deltacare.empresa.repository;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.MethodOrderer;

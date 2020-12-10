@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.in.dto;
+package xyz.deltacare.empresa.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

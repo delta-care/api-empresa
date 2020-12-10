@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.in;
+package xyz.deltacare.empresa.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -21,10 +21,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import xyz.deltacare.empresa.controller.dto.EmpresaDTO;
 import xyz.deltacare.empresa.service.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
-import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
 
 import java.time.LocalDateTime;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.ports.in.exception;
+package xyz.deltacare.empresa.controller.exception;
 
 import lombok.Getter;
 import org.springframework.validation.BindingResult;

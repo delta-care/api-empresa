@@ -1,10 +1,8 @@
-package xyz.deltacare.empresa.ports.in;
+package xyz.deltacare.empresa.controller;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,12 +14,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import xyz.deltacare.empresa.controller.dto.EmpresaDTO;
 import xyz.deltacare.empresa.service.EmpresaService;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.domain.exception.EmpresaException;
-import xyz.deltacare.empresa.ports.in.docs.EmpresaControllerDocs;
-import xyz.deltacare.empresa.ports.in.dto.EmpresaDTO;
-import xyz.deltacare.empresa.ports.in.exception.ApiErrors;
+import xyz.deltacare.empresa.controller.docs.EmpresaControllerDocs;
+import xyz.deltacare.empresa.controller.exception.ApiErrors;
 
 import javax.validation.Valid;
 import java.util.List;
