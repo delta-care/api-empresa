@@ -1,44 +1,31 @@
 package xyz.deltacare.empresa.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
+import org.apache.commons.lang.RandomStringUtils;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import xyz.deltacare.empresa.controller.dto.EmpresaDTO;
-import xyz.deltacare.empresa.service.EmpresaService;
-import xyz.deltacare.empresa.domain.Empresa;
-import xyz.deltacare.empresa.domain.exception.EmpresaException;
+import xyz.deltacare.empresa.dto.EmpresaDto;
+import xyz.deltacare.empresa.service.IEmpresaService;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Optional;
 import java.util.UUID;
 
-import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
-@WebMvcTest(controllers = EmpresaController.class)
-@AutoConfigureMockMvc
+@WebMvcTest(EmpresaController.class)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 public class EmpresaControllerTest {
 
@@ -48,31 +35,28 @@ public class EmpresaControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    @Qualifier("empresaServiceImpl")
-    EmpresaService empresaService;
+    @Qualifier("empresaService")
+    IEmpresaService service;
 
     @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
     public void criarEmpresaTest() throws Exception {
 
         // given | cenário
-        EmpresaDTO empresaDTO = EmpresaDTO.builder()
-                .cnpj("123")
-                .nome("Golden")
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
                 .build();
-        String json = new ObjectMapper().writeValueAsString(empresaDTO);
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
-        Empresa empresaCriada = Empresa.builder()
+        EmpresaDto empresaDtoCriada = EmpresaDto.builder()
                 .id(UUID.randomUUID())
-                .cnpj("123")
-                .nome("Golden")
-                .createdDate(LocalDateTime.now())
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
                 .build();
-        BDDMockito
-                .given(empresaService.criar(Mockito.any(Empresa.class)))
-                .willReturn(empresaCriada);
 
         // when | execução
+        when(service.criar(empresaDtoEnviada)).thenReturn(empresaDtoCriada);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(EMPRESA_API_URI)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -83,17 +67,21 @@ public class EmpresaControllerTest {
         // then | verificação
         perform
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value(empresaCriada.getId().toString()))
-                .andExpect(jsonPath("cnpj").value(empresaCriada.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresaCriada.getNome()));
+                .andExpect(jsonPath("id").value(empresaDtoCriada.getId().toString()))
+                .andExpect(jsonPath("cnpj").value(empresaDtoCriada.getCnpj()))
+                .andExpect(jsonPath("nome").value(empresaDtoCriada.getNome()));
     }
 
     @Test
-    @DisplayName("CRIAR: Deve lançar erro quando não houver dados suficientes para criação de empresa.")
-    public void criarEmpresaInvalidaTest() throws Exception {
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com cnpj nulo.")
+    public void criarEmpresaCnpjNuloTest() throws Exception {
 
         // given | cenário
-        String json = new ObjectMapper().writeValueAsString(new EmpresaDTO());
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .cnpj(null)
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
         // when | execução
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -106,24 +94,19 @@ public class EmpresaControllerTest {
         // then | verificação
         perform
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errors", hasSize(4)));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("CNPJ")));
     }
 
     @Test
-    @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
-    public void criarEmpresaComCnpjExistente() throws Exception {
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com cnpj nulo.")
+    public void criarEmpresaCnpjVazioTest() throws Exception {
 
         // given | cenário
-        EmpresaDTO empresaDTO = EmpresaDTO.builder()
-                .cnpj("123")
-                .nome("Golden")
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .cnpj("")
+                .nome("Bruno e Oliver Contábil ME")
                 .build();
-        String json = new ObjectMapper().writeValueAsString(empresaDTO);
-
-        String mensagemDeErro = "Empresa já cadastrada.";
-        BDDMockito
-                .given(empresaService.criar(Mockito.any(Empresa.class)))
-                .willThrow(new EmpresaException(mensagemDeErro));
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
         // when | execução
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -136,238 +119,82 @@ public class EmpresaControllerTest {
         // then | verificação
         perform
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("errors", hasSize(1)))
-                .andExpect(jsonPath("errors[0]").value(mensagemDeErro));
-
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("CNPJ")));
     }
 
     @Test
-    @DisplayName("OBTER: Deve obter informações de empresa.")
-    public void obterInformacoesDeEmpresa() throws Exception {
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome nulo.")
+    public void criarEmpresaNomeNuloTest() throws Exception {
 
         // given | cenário
-        UUID id = UUID.randomUUID();
-
-        Empresa empresa = Empresa.builder()
-                .id(id)
-                .cnpj("123")
-                .nome("Golden")
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .cnpj("38.067.491/0001-60")
+                .nome(null)
                 .build();
-
-        BDDMockito
-                .given(empresaService.obter(Mockito.any(Empresa.class), Mockito.any(Pageable.class)))
-                .willReturn(new PageImpl<>(Collections.singletonList(empresa), PageRequest.of(0, 100), 1));
-
-        String queryString = String.format("?cnpj=%s&nome=%s&page=0&size=100",
-                empresa.getCnpj(),
-                empresa.getNome());
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
         // when | execução
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(EMPRESA_API_URI.concat("/"+queryString))
-                .accept(MediaType.APPLICATION_JSON);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("content", Matchers.hasSize(1)))
-                .andExpect(jsonPath("totalElements").value(1))
-                .andExpect(jsonPath("pageable.pageSize").value(100))
-                .andExpect(jsonPath("pageable.pageNumber").value(0));
-
-    }
-
-    @Test
-    @DisplayName("OBTER: Deve obter informações de uma empresa por id.")
-    public void obterInformacoesDeEmpresaPorId() throws Exception {
-
-        // given | cenário
-        UUID id = UUID.randomUUID();
-
-        Empresa empresa = Empresa.builder()
-                .id(id)
-                .cnpj("123")
-                .nome("Golden")
-                .build();
-
-        BDDMockito
-                .given(empresaService.getById(id))
-                .willReturn(Optional.of(empresa));
-
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(EMPRESA_API_URI.concat("/"+id))
-                .accept(MediaType.APPLICATION_JSON);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(empresa.getId().toString()))
-                .andExpect(jsonPath("cnpj").value(empresa.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresa.getNome()));
-
-    }
-
-    @Test
-    @DisplayName("OBTER: Deve retornar código not found quando tentar obter empresa com id inexistente.")
-    public void obterEmpresaIdInexistente() throws Exception {
-
-        // given | cenário
-        UUID id = UUID.randomUUID();
-
-        BDDMockito
-                .given(empresaService.getById(id))
-                .willReturn(Optional.empty());
-
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(EMPRESA_API_URI.concat("/"+id))
-                .accept(MediaType.APPLICATION_JSON);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isNotFound());
-
-    }
-
-    @Test
-    @DisplayName("EXCLUIR: Deve excluir uma empresa.")
-    public void excluirEmpresa() throws Exception {
-
-        // given | cenário
-        Empresa empresa = Empresa.builder()
-                .id(UUID.randomUUID())
-                .cnpj("123")
-                .nome("Golden")
-                .build();
-
-        BDDMockito
-                .given(empresaService.getById(empresa.getId()))
-                .willReturn(Optional.of(empresa));
-
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .delete(EMPRESA_API_URI.concat("/"+empresa.getId()))
-                .accept(MediaType.APPLICATION_JSON);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isNoContent());
-
-    }
-
-    @Test
-    @DisplayName("EXCLUIR: Deve excluir uma empresa com CNPJ inexistente.")
-    public void excluirEmpresaComCnpjInexistente() throws Exception {
-
-        // given | cenário
-        Empresa empresa = Empresa.builder()
-                .id(UUID.randomUUID())
-                .cnpj("123")
-                .nome("Golden")
-                .build();
-
-        BDDMockito
-                .given(empresaService.getById(empresa.getId()))
-                .willReturn(Optional.empty());
-
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .delete(EMPRESA_API_URI.concat("/"+empresa.getId()))
-                .accept(MediaType.APPLICATION_JSON);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isNotFound());
-
-    }
-
-    @Test
-    @DisplayName("ATUALIZAR: Deve atualizar nome de uma empresa.")
-    public void atualizarNomeDeEmpresa() throws Exception {
-
-        // given | cenário
-        UUID id = UUID.randomUUID();
-
-        EmpresaDTO empresaEnviada = EmpresaDTO.builder()
-                .id(id)
-                .cnpj("123")
-                .nome("Golden")
-                .build();
-        String jsonEnviado = new ObjectMapper().writeValueAsString(empresaEnviada);
-
-        Empresa empresaExistente = Empresa.builder()
-                .id(id)
-                .cnpj("123")
-                .nome("Golden")
-                .build();
-        BDDMockito
-                .given(empresaService.getById(id))
-                .willReturn(Optional.of(empresaExistente));
-
-        Empresa empresaASerAtualizada = Empresa.builder()
-                .id(id)
-                .cnpj("123")
-                .nome("Golden")
-                .build();
-        Empresa empresaAtualizada = Empresa.builder()
-                .id(id)
-                .cnpj("123")
-                .nome("Golden Cross")
-                .build();
-        BDDMockito
-                .given(empresaService.atualizar(empresaASerAtualizada))
-                .willReturn(empresaAtualizada);
-
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .patch(EMPRESA_API_URI.concat("/"+id))
+                .post(EMPRESA_API_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(jsonEnviado);
+                .content(json);
         ResultActions perform = mockMvc.perform(request);
 
         // then | verificação
         perform
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("nome").value(empresaAtualizada.getNome()));
-
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("NOME")));
     }
 
     @Test
-    @DisplayName("ATUALIZAR: Deve retornar código not found quando tentar atualizar empresa com CNPJ inexistente.")
-    public void atualizarEmpresaCnpjInexistente() throws Exception {
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome vazio.")
+    public void criarEmpresaNomeVazioTest() throws Exception {
 
         // given | cenário
-        UUID id = UUID.randomUUID();
-
-        Empresa empresaEnviada = Empresa.builder()
-                .id(id)
-                .cnpj("123")
-                .nome("Golden Cross")
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .cnpj("38.067.491/0001-60")
+                .nome(null)
                 .build();
-        String jsonEnviado = new ObjectMapper().writeValueAsString(empresaEnviada);
-
-        BDDMockito
-                .given(empresaService.getById(id))
-                .willReturn(Optional.empty());
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
         // when | execução
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .patch(EMPRESA_API_URI.concat("/"+id))
+                .post(EMPRESA_API_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(jsonEnviado);
+                .content(json);
         ResultActions perform = mockMvc.perform(request);
 
         // then | verificação
         perform
-                .andExpect(status().isNotFound());
-
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("NOME")));
     }
+
+    @Test
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome vazio.")
+    public void criarEmpresaNomeMais255CaracteresTest() throws Exception {
+
+        // given | cenário
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .cnpj("38.067.491/0001-60")
+                .nome(RandomStringUtils.randomAlphabetic(256))
+                .build();
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(EMPRESA_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("NOME")));
+    }
+
 }

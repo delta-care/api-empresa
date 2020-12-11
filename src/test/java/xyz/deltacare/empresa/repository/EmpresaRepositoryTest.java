@@ -1,140 +1,24 @@
 package xyz.deltacare.empresa.repository;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.*;
+import org.assertj.core.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 import xyz.deltacare.empresa.domain.Empresa;
 
-import java.time.LocalDateTime;
-import java.util.Optional;
-import java.util.UUID;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import static org.assertj.core.api.Assertions.*;
-
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 public class EmpresaRepositoryTest {
 
     @Autowired
-    TestEntityManager entityManager;
-
-    @Autowired
     EmpresaRepository repository;
 
     @Test
-    @DisplayName("EXISTIR: Deve retornar verdadeiro quando existir uma empresa com CNPJ informado.")
-    public void retornaVerdadeiroQuandoExisteEmpresaCNPJInformado() {
-
-        // given | cenário
-        String cnpj = "123";
-        Empresa empresa = Empresa.builder()
-                .cnpj("123")
-                .nome("Golden")
-                .createdDate(LocalDateTime.now())
-                .build();
-        entityManager.persist(empresa);
-
-        // when | execução
-        boolean exists = repository.existsByCnpj(cnpj);
-
-        // then | verificação
-        assertThat(exists).isTrue();
-
-    }
-
-    @Test
-    @DisplayName("EXISTIR: Deve retornar falso quando existir uma empresa com CNPJ informado.")
-    public void retornaFalsoQuandoExisteEmpresaCNPJInformado() {
-
-        // given | cenário
-        String cnpj = "123";
-        Empresa empresa = Empresa.builder()
-                .cnpj("321")
-                .nome("Golden")
-                .createdDate(LocalDateTime.now())
-                .build();
-        entityManager.persist(empresa);
-
-        // when | execução
-        boolean exists = repository.existsByCnpj(cnpj);
-
-        // then | verificação
-        assertThat(exists).isFalse();
-
-    }
-
-    @Test
-    @DisplayName("OBTER: Deve obter uma empresa por id.")
-    public void obterEmpresaPorId() {
-
-        // given | cenário
-        Empresa empresaPersistida = Empresa.builder()
-                .cnpj("321")
-                .nome("Golden")
-                .build();
-        entityManager.persist(empresaPersistida);
-
-        // when | execução
-        Optional<Empresa> empresaObtida = repository.findById(empresaPersistida.getId());
-
-        // then | verificação
-        assertThat(empresaObtida.isPresent()).isTrue();
-        assertThat(empresaObtida.get().getId()).isEqualTo(empresaPersistida.getId());
-        assertThat(empresaObtida.get().getCnpj()).isEqualTo(empresaPersistida.getCnpj());
-        assertThat(empresaObtida.get().getNome()).isEqualTo(empresaPersistida.getNome());
-
-    }
-
-    @Test
-    @DisplayName("OBTER: Deve retornar false quando obter uma empresa por id inexistente.")
-    public void obterEmpresaIdInexistente() {
-
-        // given | cenário
-        UUID id = UUID.randomUUID();
-
-        // when | execução
-        Optional<Empresa> empresaObtida = repository.findById(id);
-
-        // then | verificação
-        assertThat(empresaObtida.isPresent()).isFalse();
-
-    }
-
-    @Test
-    @DisplayName("EXCLUIR: Deve excluir uma empresa.")
-    public void excluirEmpresa() {
-
-        // given | cenário
-        Empresa empresaPersistida = Empresa.builder()
-                .cnpj("123")
-                .nome("Golden")
-                .createdDate(LocalDateTime.now())
-                .build();
-        entityManager.persist(empresaPersistida);
-
-        Empresa empresaEncontrada = entityManager.find(Empresa.class, empresaPersistida.getId());
-
-        // when | execução
-        repository.delete(empresaEncontrada);
-
-        // then | verificação
-        Empresa empresaExcluida = entityManager.find(Empresa.class, empresaPersistida.getId());
-        assertThat(empresaExcluida).isNull();
-
-    }
-
-    @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
-    public void criarEmpresa() {
+    public void criarEmpresaTest() {
 
         // given | cenário
         Empresa empresa = Empresa.builder()
@@ -149,4 +33,28 @@ public class EmpresaRepositoryTest {
         assertThat(empresaSalva.getId()).isNotNull();
 
     }
+
+    @Test
+    @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    public void criarEmpresaComCnpjExistente() {
+
+        // given | cenário
+        Empresa empresaExistente = Empresa.builder()
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        repository.save(empresaExistente);
+
+        Empresa empresaEnviada = Empresa.builder()
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        Throwable exception = Assertions.catchThrowable(() -> repository.saveAndFlush(empresaEnviada));
+
+        // then | verificação
+        assertThat(exception).isInstanceOf(DataIntegrityViolationException.class);
+    }
+
 }

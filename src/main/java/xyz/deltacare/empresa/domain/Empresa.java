@@ -1,17 +1,20 @@
 package xyz.deltacare.empresa.domain;
 
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import xyz.deltacare.empresa.domain.audit.Auditable;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import java.util.UUID;
 
 @Data
-@Table
 @Entity
-@SuperBuilder
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class Empresa extends Auditable {
 

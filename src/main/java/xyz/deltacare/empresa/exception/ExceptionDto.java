@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.controller.dto;
+package xyz.deltacare.empresa.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ErroDTO {
+public class ExceptionDto {
 
     private int code;
 

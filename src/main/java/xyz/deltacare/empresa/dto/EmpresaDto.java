@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.controller.dto;
+package xyz.deltacare.empresa.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,13 +14,12 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmpresaDTO {
+public class EmpresaDto {
 
     private UUID id;
 
     @NotNull
     @NotEmpty
-    @Size(max = 255)
     private String cnpj;
 
     @NotNull
