@@ -27,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(EmpresaController.class)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-public class EmpresaControllerTest {
+class EmpresaControllerTest {
 
     private static final String EMPRESA_API_URI = "/v1/empresas";
 
@@ -40,7 +40,7 @@ public class EmpresaControllerTest {
 
     @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
-    public void criarEmpresaTest() throws Exception {
+    void criarEmpresaTest() throws Exception {
 
         // given | cenário
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
@@ -72,109 +72,76 @@ public class EmpresaControllerTest {
                 .andExpect(jsonPath("nome").value(empresaDtoCriada.getNome()));
     }
 
-    @Test
-    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com cnpj nulo.")
-    public void criarEmpresaCnpjNuloTest() throws Exception {
+    void criarEmpresaValidDto(EmpresaDto empresaDtoEnviada, String campo) throws Exception {
 
         // given | cenário
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(EMPRESA_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(campo)));
+    }
+
+    @Test
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com cnpj nulo.")
+    void criarEmpresaCnpjNuloTest() throws Exception {
+
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
                 .cnpj(null)
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
-        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+        criarEmpresaValidDto(empresaDtoEnviada, "CNPJ");
 
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(EMPRESA_API_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(json);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("CNPJ")));
     }
 
     @Test
     @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com cnpj nulo.")
-    public void criarEmpresaCnpjVazioTest() throws Exception {
+    void criarEmpresaCnpjVazioTest() throws Exception {
 
-        // given | cenário
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
                 .cnpj("")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
-        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+        criarEmpresaValidDto(empresaDtoEnviada, "CNPJ");
 
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(EMPRESA_API_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(json);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("CNPJ")));
     }
 
     @Test
     @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome nulo.")
-    public void criarEmpresaNomeNuloTest() throws Exception {
+    void criarEmpresaNomeNuloTest() throws Exception {
 
-        // given | cenário
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
                 .cnpj("38.067.491/0001-60")
                 .nome(null)
                 .build();
-        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+        criarEmpresaValidDto(empresaDtoEnviada, "NOME");
 
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(EMPRESA_API_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(json);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("NOME")));
     }
 
     @Test
     @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome vazio.")
-    public void criarEmpresaNomeVazioTest() throws Exception {
+    void criarEmpresaNomeVazioTest() throws Exception {
 
-        // given | cenário
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
                 .cnpj("38.067.491/0001-60")
-                .nome(null)
+                .nome("")
                 .build();
-        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+        criarEmpresaValidDto(empresaDtoEnviada, "NOME");
 
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(EMPRESA_API_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(json);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("NOME")));
     }
 
     @Test
     @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome vazio.")
-    public void criarEmpresaNomeMais255CaracteresTest() throws Exception {
+    void criarEmpresaNomeMais255CaracteresTest() throws Exception {
 
         // given | cenário
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()

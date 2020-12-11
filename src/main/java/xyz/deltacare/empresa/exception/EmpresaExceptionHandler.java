@@ -43,11 +43,6 @@ public class EmpresaExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponseEntity(HttpStatus.BAD_REQUEST, "Malformed JSON body and/or field error", Collections.singletonList(exception.getLocalizedMessage()));
     }
 
-//    @ExceptionHandler(UsernameNotFoundException.class)
-//    public ResponseEntity<Object> handleAuthenticationException(UsernameNotFoundException exception) {
-//        return buildResponseEntity(HttpStatus.UNAUTHORIZED, exception.getMessage(), Collections.singletonList(exception.getMessage()));
-//    }
-
     private ResponseEntity<Object> buildResponseEntity(HttpStatus httpStatus, String message, List<String> errors) {
         ExceptionDto apiError = ExceptionDto.builder()
                 .code(httpStatus.value())

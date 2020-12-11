@@ -11,14 +11,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-public class EmpresaRepositoryTest {
+class EmpresaRepositoryTest {
 
     @Autowired
     EmpresaRepository repository;
 
     @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
-    public void criarEmpresaTest() {
+    void criarEmpresaTest() {
 
         // given | cenário
         Empresa empresa = Empresa.builder()
@@ -36,7 +36,7 @@ public class EmpresaRepositoryTest {
 
     @Test
     @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
-    public void criarEmpresaComCnpjExistente() {
+    void criarEmpresaComCnpjExistente() {
 
         // given | cenário
         Empresa empresaExistente = Empresa.builder()

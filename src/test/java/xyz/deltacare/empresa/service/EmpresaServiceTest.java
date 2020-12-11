@@ -18,7 +18,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.DisplayName.class)
-public class EmpresaServiceTest {
+class EmpresaServiceTest {
 
     @Autowired
     @Qualifier("empresaService")
@@ -29,7 +29,7 @@ public class EmpresaServiceTest {
 
     @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
-    public void criarEmpresaTest() {
+    void criarEmpresaTest() {
 
         // given | cenário
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
@@ -60,7 +60,7 @@ public class EmpresaServiceTest {
 
     @Test
     @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
-    public void criarEmpresaComCnpjExistente() {
+    void criarEmpresaComCnpjExistente() {
 
         // given | cenário
         EmpresaDto empresaDto = EmpresaDto.builder()
