@@ -35,16 +35,16 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: {{ .Values.service.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /actuator/health
-              port: 8080
+              port: {{ .Values.service.port }}
           readinessProbe:
             httpGet:
               path: /actuator/health
-              port: 8080
+              port: {{ .Values.service.port }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}

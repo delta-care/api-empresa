@@ -47,9 +47,9 @@ ingress:
     # kubernetes.io/tls-acme: "true"
   hosts:
     # definido por ambiente no pipeline
-    - host: deltacare.xyz
+    - host:
       paths:
-      - path: /v1/empresas
+      - path:
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
