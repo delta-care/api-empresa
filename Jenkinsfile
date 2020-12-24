@@ -5,7 +5,8 @@ podTemplate(
     cloud: 'kubernetes',
     containers: [
         containerTemplate(name: 'docker',image: 'docker',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent'),
-        containerTemplate(name: 'helm',image: 'dtzar/helm-kubectl:3.4.1',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent')
+        containerTemplate(name: 'helm',image: 'dtzar/helm-kubectl:3.4.1',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent'),
+        containerTemplate(name: 'maven',image: 'maven:3.6.3-amazoncorretto-11',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent')
     ],
     volumes: [
         hostPathVolume(hostPath: '/var/run/docker.sock',mountPath: '/var/run/docker.sock')
@@ -30,10 +31,19 @@ podTemplate(
             OBJ_REPO_GIT = git branch: 'main', credentialsId: 'dockerhub-jdscio', url: URL_REPO_GIT
             def props = readMavenPom file: 'pom.xml'
             APP_VERSION = props.version
-            echo props.toString()
+            sh "ls -la"
         }
-        /*
+
+        stage('Unit Test') {
+            container('maven') {
+                sh 'mvn test'
+            }
+        }
+
         stage('Package') {
+            container('maven') {
+                sh 'mvn package -DskipTests'
+            }
             container('docker') {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-jdscio', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
                     sh "docker build -t ${IMAGE_NAME_DOCKER}:${APP_VERSION} ."
@@ -43,6 +53,7 @@ podTemplate(
             }
         }
 
+        /*
         stage('Deploy') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
