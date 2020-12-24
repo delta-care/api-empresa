@@ -23,8 +23,9 @@ podTemplate(
         def IMAGE_NAME_DOCKER="deltacare/${APP_NAME}"
         def IMAGE_NAME_CHART="deltacare/${APP_NAME}"
         def K8S_NAMESPACE='dev'
-        def DOMAIN='deltacare.xyz'
         def SUBDOMAIN='dev'
+        def DOMAIN='deltacare.xyz'
+        def PATH='/v1/empresas'
         def OBJ_REPO_GIT
 
         stage('Checkout') {
@@ -52,16 +53,15 @@ podTemplate(
             }
         }
 
-        /*
         stage('Deploy') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
-                sh "helm upgrade ${APP_NAME} ./helm --install --set image.tag=${APP_VERSION} --namespace ${K8S_NAMESPACE} --set ingress.hosts[0].host=${SUBDOMAIN}.${DOMAIN} --set ingress.hosts[0].paths[0].path=/"
+                sh "helm upgrade ${APP_NAME} ./helm --install --set image.tag=${APP_VERSION} --namespace ${K8S_NAMESPACE} --set ingress.hosts[0].host=${SUBDOMAIN}.${DOMAIN} --set ingress.hosts[0].paths[0].path=${PATH}"
                 sh "helm repo add deltacare ${URL_REPO_CHART}"
                 sh "helm plugin install ${URL_REPO_HPUSH}"
                 sh "helm push helm/ deltacare"
                 sh "helm repo update"
             }
-        }*/
+        }
     }
 }
