@@ -111,7 +111,7 @@ class EmpresaControllerTest {
                 .cnpj("")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
-        criarEmpresaValidDto(empresaDtoEnviada, "CNxPJ");
+        criarEmpresaValidDto(empresaDtoEnviada, "CNPJ");
 
     }
 
