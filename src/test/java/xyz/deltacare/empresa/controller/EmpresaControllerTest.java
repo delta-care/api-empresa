@@ -51,7 +51,7 @@ class EmpresaControllerTest {
 
         EmpresaDto empresaDtoCriada = EmpresaDto.builder()
                 .id(UUID.randomUUID())
-                .cnpj("38.067.491/0001-60")
+                .cnpj("38.067.491/0001-61")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
 
