@@ -48,7 +48,7 @@ ingress:
   hosts:
     # definido por ambiente no pipeline
     - host: deltacare.xyz
-      paths: []
+      paths:
       - path: /v1/empresas
   tls: []
   #  - secretName: chart-example-tls
