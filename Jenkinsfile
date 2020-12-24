@@ -45,7 +45,9 @@ podTemplate(
                 sh 'mvn package -DskipTests'
             }
             container('docker') {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-jdscio', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-jdscio', 
+                                                  passwordVariable: 'DOCKER_HUB_PASS', 
+                                                  usernameVariable: 'DOCKER_HUB_USER')]) {
                     sh "docker build -t ${IMAGE_NAME_DOCKER}:${APP_VERSION} ."
                     sh "docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASS}"
                     sh "docker push ${IMAGE_NAME_DOCKER}:${APP_VERSION}"
@@ -56,7 +58,11 @@ podTemplate(
         stage('Deploy') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
-                sh "helm upgrade ${APP_NAME} ./helm --install --set image.tag=${APP_VERSION} --namespace ${K8S_NAMESPACE} --set ingress.hosts[0].host=${SUBDOMAIN}.${DOMAIN} --set ingress.hosts[0].paths[0].path=${PATH}"
+                sh "helm upgrade ${APP_NAME} ./helm --install \
+                                                    --namespace ${K8S_NAMESPACE} \ 
+                                                    --set image.tag=${APP_VERSION} \
+                                                    --set ingress.hosts[0].host=${SUBDOMAIN}.${DOMAIN} \
+                                                    --set ingress.hosts[0].paths[0].path=${PATH}"
                 sh "helm repo add deltacare ${URL_REPO_CHART}"
                 sh "helm plugin install ${URL_REPO_HPUSH}"
                 sh "helm push helm/ deltacare"
