@@ -31,7 +31,6 @@ podTemplate(
             OBJ_REPO_GIT = git branch: 'main', credentialsId: 'dockerhub-jdscio', url: URL_REPO_GIT
             def props = readMavenPom file: 'pom.xml'
             APP_VERSION = props.version
-            sh "ls -la"
         }
 
         stage('Unit Test') {
