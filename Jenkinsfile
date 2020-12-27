@@ -6,7 +6,7 @@ podTemplate(
     containers: [
         containerTemplate(name: 'docker',image: 'docker',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent'),
         containerTemplate(name: 'helm',image: 'dtzar/helm-kubectl:3.4.1',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent'),
-        containerTemplate(name: 'maven',image: 'maven:3.6.3-amazoncorretto-11',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent')
+        containerTemplate(name: 'maven',image: 'maven:3.6.3-amazoncorretto-11',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent',envVars: [envVar(key: 'SONAR_TOKEN', value:'0451b6bac710aaea35364a7402998123fffdf46d')])
     ],
     volumes: [
         hostPathVolume(hostPath: '/var/run/docker.sock',mountPath: '/var/run/docker.sock')
@@ -27,24 +27,22 @@ podTemplate(
         def DOMAIN='deltacare.xyz'
         def PATH='/v1/empresas'
         def OBJ_REPO_GIT
-
         
         stage('Checkout') {
             OBJ_REPO_GIT = git branch: 'main', credentialsId: 'dockerhub-jdscio', url: URL_REPO_GIT
             def props = readMavenPom file: 'pom.xml'
             APP_VERSION = props.version
         }
-
-        stage('Sonar Analysis') {
-            container('maven') {
-                sh 'SONAR_TOKEN=d87a53ea4d5d332d7b666337d221c78af273fd3b'
-                sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
-            }
-        }
-        /*
+  
         stage('Unit Test') {
             container('maven') {
                 sh 'mvn test'
+            }
+        }
+        
+        stage('Sonar Analysis') {
+            container('maven') {
+                sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
             }
         }
 
@@ -60,7 +58,6 @@ podTemplate(
                 }
             }
         }
-
         stage('Deploy') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
@@ -71,6 +68,5 @@ podTemplate(
                 sh "helm repo update"
             }
         }
-        */
     }
 }
