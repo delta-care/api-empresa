@@ -140,7 +140,7 @@ class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome vazio.")
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com nome maior do que 255 caracteres.")
     void criarEmpresaNomeMais255CaracteresTest() throws Exception {
 
         // given | cenário
