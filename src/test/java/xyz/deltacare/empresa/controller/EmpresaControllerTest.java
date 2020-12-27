@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 class EmpresaControllerTest {
 
-    private static final String EMPRESA_API_URI = "/v1/empresas";
+    private static final String EMPRESA_API_URI = "/api/v1/empresas";
 
     @Autowired
     MockMvc mockMvc;

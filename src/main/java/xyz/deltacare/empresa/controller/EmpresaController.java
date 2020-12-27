@@ -11,7 +11,7 @@ import xyz.deltacare.empresa.controller.docs.EmpresaControllerDocs;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/v1/empresas")
+@RequestMapping("/api/v1/empresas")
 public class EmpresaController implements EmpresaControllerDocs {
 
     private final IEmpresaService service;
@@ -26,5 +26,4 @@ public class EmpresaController implements EmpresaControllerDocs {
     public EmpresaDto criar(@RequestBody @Valid EmpresaDto empresaDto) {
         return service.criar(empresaDto);
     }
-
 }
