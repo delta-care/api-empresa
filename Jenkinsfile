@@ -28,12 +28,20 @@ podTemplate(
         def PATH='/v1/empresas'
         def OBJ_REPO_GIT
 
+        
         stage('Checkout') {
             OBJ_REPO_GIT = git branch: 'main', credentialsId: 'dockerhub-jdscio', url: URL_REPO_GIT
             def props = readMavenPom file: 'pom.xml'
             APP_VERSION = props.version
         }
 
+        stage('Sonar Analysis') {
+            container('maven') {
+                sh 'SONAR_TOKEN=d87a53ea4d5d332d7b666337d221c78af273fd3b'
+                sh 'mvn verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+            }
+        }
+        /*
         stage('Unit Test') {
             container('maven') {
                 sh 'mvn test'
@@ -63,5 +71,6 @@ podTemplate(
                 sh "helm repo update"
             }
         }
+        */
     }
 }
