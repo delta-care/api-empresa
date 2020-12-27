@@ -36,7 +36,7 @@ podTemplate(
 
         stage('Package') {
             container('maven') {
-                sh 'mvn clean package -DskipTests=true'
+                sh 'mvn clean package -D skipTests=true'
             }
         }
 
@@ -49,7 +49,7 @@ podTemplate(
         stage('Sonar Analysis') {
             container('maven') {
                 withSonarQubeEnv(installationName: 'SonarCloudServer') {
-                    sh 'mvn jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar'
+                    sh 'mvn jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P sonar'
                 }
             }
         }
