@@ -2,6 +2,7 @@ package xyz.deltacare.empresa.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Controller;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -14,12 +15,13 @@ import static springfox.documentation.builders.RequestHandlerSelectors.basePacka
 
 @Configuration
 @EnableSwagger2
+@Controller
 public class SwaggerConfig {
 
     private static final String BASE_PACKAGE = "xyz.deltacare.empresa";
     private static final String API_TITLE = "API de Empresa da Deltacare";
     private static final String API_DESCRIPTION = "";
-    private static final String API_VERSION = "1.0.0";
+    private static final String API_VERSION = "0.1.0";
     private static final String CONTACT_NAME = "David Carvalho";
     private static final String CONTACT_GITHUB = "https://github.com/delta-care/api-empresa";
     private static final String CONTACT_EMAIL = "jdavidsilv@gmail.com";
