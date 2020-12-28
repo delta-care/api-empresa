@@ -6,15 +6,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.domain.Empresa;
-import xyz.deltacare.empresa.exception.EmpresaExistenteException;
 import xyz.deltacare.empresa.repository.EmpresaRepository;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,7 +29,7 @@ class EmpresaServiceTest {
     EmpresaService service;
 
     @Test
-    @DisplayName("CRIAR: Deve criar uma empresa.")
+    @DisplayName("CRIAR: Deve criar uma empresa com sucesso.")
     void criarEmpresaTest() {
 
         // given | cenário
@@ -78,9 +76,60 @@ class EmpresaServiceTest {
 
         // then | verificação
         assertThat(exception)
-                .isInstanceOf(EmpresaExistenteException.class)
+                .isInstanceOf(EntityExistsException.class)
                 .hasMessage(String.format("Empresa com CNPJ %s já existe.", empresaDto.getCnpj()));
 
     }
 
+    @Test
+    @DisplayName("PESQUISAR: Deve pesquisar uma empresa com sucesso.")
+    void pesquisarEmpresaTest() {
+
+        // given | cenário
+        UUID idEnviado = UUID.randomUUID();
+        Empresa empresaEncontrada = Empresa.builder()
+                .id(idEnviado)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        EmpresaDto empresaDtoEsperada = EmpresaDto.builder()
+                .id(idEnviado)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(repository.findById(idEnviado)).thenReturn(Optional.of(empresaEncontrada));
+        EmpresaDto empresaDtoEncontrada = service.findById(idEnviado);
+
+        // then | verificação
+        assertThat(empresaDtoEncontrada.getId()).isEqualTo(empresaDtoEsperada.getId());
+        assertThat(empresaDtoEncontrada.getCnpj()).isEqualTo(empresaDtoEsperada.getCnpj());
+        assertThat(empresaDtoEncontrada.getNome()).isEqualTo(empresaDtoEsperada.getNome());
+
+    }
+
+    @Test
+    @DisplayName("PESQUISAR: Deve lançar erro ao tentar pesquisar empresa por Id que não existe.")
+    void pesquisarEmpresaComIdInexistenteTest() {
+
+        // given | cenário
+        UUID idEnviado = UUID.randomUUID();
+        EmpresaDto empresaDtoEsperada = EmpresaDto.builder()
+                .id(idEnviado)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(repository.findById(idEnviado)).thenReturn(Optional.empty());
+        Throwable exception = Assertions.catchThrowable(() -> service.findById(idEnviado));
+
+
+        // then | verificação
+        assertThat(exception)
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(String.format("Empresa com id %s não existe.", empresaDtoEsperada.getId()));
+
+    }
 }
