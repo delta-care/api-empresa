@@ -55,7 +55,9 @@ podTemplate(
         }
 
         stage("Quality Gate") {
-            waitForQualityGate abortPipeline: true
+            timeout(time: 1, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+            }
         }
 
         stage('Docker Hub') {
