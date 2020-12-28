@@ -20,7 +20,10 @@ public class EmpresaService implements IEmpresaService {
 
     @Override
     public EmpresaDto create(EmpresaDto empresaDto) {
-        verifyIfExists(empresaDto.getCnpj());
+        repository.findByCnpj(empresaDto.getCnpj())
+                .ifPresent(empresa -> {
+                    throw new EntityExistsException(
+                            String.format("Empresa com CNPJ %s já existe.", empresaDto.getCnpj()));});
         Empresa empresaASerCriada = empresaMapper.toModel(empresaDto);
         Empresa empresaCriada = repository.save(empresaASerCriada);
         return empresaMapper.toDto(empresaCriada);
@@ -34,11 +37,4 @@ public class EmpresaService implements IEmpresaService {
         return empresaMapper.toDto(empresaEncontrada);
     }
 
-    private void verifyIfExists(String cnpj) {
-        repository.findByCnpj(cnpj)
-                .ifPresent(empresa -> {
-                    throw new EntityExistsException(
-                            String.format("Empresa com CNPJ %s já existe.", cnpj));
-                });
-    }
 }
