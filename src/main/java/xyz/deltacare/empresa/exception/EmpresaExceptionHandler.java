@@ -40,10 +40,10 @@ public class EmpresaExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException exception, HttpHeaders headers, HttpStatus status, WebRequest request) {
         List<String> errors = new ArrayList<>();
         exception.getBindingResult().getFieldErrors()
-                .forEach(fieldError -> errors.add("Field " + fieldError.getField().toUpperCase() + " " + fieldError.getDefaultMessage()));
+                .forEach(fieldError -> errors.add("Campo " + fieldError.getField().toUpperCase() + " " + fieldError.getDefaultMessage()));
         exception.getBindingResult().getGlobalErrors()
-                .forEach(objectError -> errors.add("Object " + objectError.getObjectName() + " " + objectError.getDefaultMessage()));
-        return buildResponseEntity(HttpStatus.BAD_REQUEST, "Informed argument(s) validation error(s)", errors);
+                .forEach(objectError -> errors.add("Campo " + objectError.getObjectName() + " " + objectError.getDefaultMessage()));
+        return buildResponseEntity(HttpStatus.BAD_REQUEST, "Erro(s) de validação de argumento(s) enviado(s)", errors);
     }
 
     @Override
