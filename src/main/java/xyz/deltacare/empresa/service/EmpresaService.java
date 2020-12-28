@@ -20,7 +20,7 @@ public class EmpresaService implements IEmpresaService {
     private static final EmpresaMapper empresaMapper = EmpresaMapper.INSTANCE;
 
     @Override
-    public EmpresaDto criar(EmpresaDto empresaDto) {
+    public EmpresaDto create(EmpresaDto empresaDto) {
         if (repository.existsByCnpj(empresaDto.getCnpj())) {
             throw new EntityExistsException(
                     String.format("Empresa com CNPJ %s já existe.", empresaDto.getCnpj()));

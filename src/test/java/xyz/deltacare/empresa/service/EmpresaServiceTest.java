@@ -50,7 +50,7 @@ class EmpresaServiceTest {
         // when | execução
         when(repository.existsByCnpj(empresaEnviada.getCnpj())).thenReturn(false);
         when(repository.save(empresaEnviada)).thenReturn(empresaEsperada);
-        EmpresaDto empresaDtoCriada = service.criar(empresaDtoEnviada);
+        EmpresaDto empresaDtoCriada = service.create(empresaDtoEnviada);
 
         // then | verificação
         assertThat(empresaDtoCriada.getId()).isEqualTo(empresaEsperada.getId());
@@ -71,7 +71,7 @@ class EmpresaServiceTest {
 
         // when | execução
         when(repository.existsByCnpj(empresaDto.getCnpj())).thenReturn(true);
-        Throwable exception = Assertions.catchThrowable(() -> service.criar(empresaDto));
+        Throwable exception = Assertions.catchThrowable(() -> service.create(empresaDto));
 
 
         // then | verificação
@@ -132,4 +132,5 @@ class EmpresaServiceTest {
                 .hasMessage(String.format("Empresa com id %s não existe.", empresaDtoEsperada.getId()));
 
     }
+
 }

@@ -14,5 +14,5 @@ public interface EmpresaControllerDocs {
             @ApiResponse(code = 201, message = "Empresa criada com sucesso."),
             @ApiResponse(code = 400, message = "Mensagem de erro a ser definida.")
     })
-    EmpresaDto criar(EmpresaDto empresaDto);
+    EmpresaDto create(EmpresaDto empresaDto);
 }

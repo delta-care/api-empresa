@@ -54,7 +54,7 @@ class EmpresaControllerTest {
                 .build();
 
         // when | execução
-        when(service.criar(empresaDtoEnviada)).thenReturn(empresaDtoCriada);
+        when(service.create(empresaDtoEnviada)).thenReturn(empresaDtoCriada);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .post(EMPRESA_API_URI)
                 .contentType(MediaType.APPLICATION_JSON)

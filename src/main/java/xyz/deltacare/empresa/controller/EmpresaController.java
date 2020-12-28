@@ -23,7 +23,7 @@ public class EmpresaController implements EmpresaControllerDocs {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EmpresaDto criar(@RequestBody @Valid EmpresaDto empresaDto) {
-        return service.criar(empresaDto);
+    public EmpresaDto create(@RequestBody @Valid EmpresaDto empresaDto) {
+        return service.create(empresaDto);
     }
 }
