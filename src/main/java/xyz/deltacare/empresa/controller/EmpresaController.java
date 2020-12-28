@@ -9,6 +9,7 @@ import xyz.deltacare.empresa.service.IEmpresaService;
 import xyz.deltacare.empresa.controller.docs.EmpresaControllerDocs;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/empresas")
@@ -28,5 +29,13 @@ public class EmpresaController implements EmpresaControllerDocs {
     }
 
     @GetMapping("/{id}")
-    public EmpresaDto findById(@PathVariable Long id) { return service.findById(id); }
+    public EmpresaDto findById(@PathVariable Long id) {
+        return service.findById(id);
+    }
+
+    @GetMapping
+    public List<EmpresaDto> findAll() {
+        return service.findAll();
+    }
+
 }

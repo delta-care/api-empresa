@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.IEmpresaService;
 
+import java.util.Collections;
 import java.util.Random;
 
 import static org.mockito.Mockito.when;
@@ -79,11 +80,6 @@ class EmpresaControllerTest {
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
-        EmpresaDto empresaDtoEsperada = EmpresaDto.builder()
-                .id(idEnviado)
-                .cnpj("38.067.491/0001-60")
-                .nome("Bruno e Oliver Contábil ME")
-                .build();
 
         // when | execução
         when(service.findById(idEnviado)).thenReturn(empresaDtoEncontrada);
@@ -96,9 +92,35 @@ class EmpresaControllerTest {
         // then | verificação
         perform
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(empresaDtoEsperada.getId().toString()))
-                .andExpect(jsonPath("cnpj").value(empresaDtoEsperada.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresaDtoEsperada.getNome()));
+                .andExpect(jsonPath("id").value(empresaDtoEncontrada.getId().toString()))
+                .andExpect(jsonPath("cnpj").value(empresaDtoEncontrada.getCnpj()))
+                .andExpect(jsonPath("nome").value(empresaDtoEncontrada.getNome()));
     }
 
+    @Test
+    @DisplayName("Deve pesquisar empresas com sucesso.")
+    void pesquisarEmpresasTest() throws Exception {
+
+        // given | cenário
+        EmpresaDto empresaDtoEncontrada = EmpresaDto.builder()
+                .id(new Random().nextLong())
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(service.findAll()).thenReturn(Collections.singletonList(empresaDtoEncontrada));
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(EMPRESA_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(empresaDtoEncontrada.getId().toString()))
+                .andExpect(jsonPath("$[0].cnpj").value(empresaDtoEncontrada.getCnpj()))
+                .andExpect(jsonPath("$[0].nome").value(empresaDtoEncontrada.getNome()));
+    }
 }

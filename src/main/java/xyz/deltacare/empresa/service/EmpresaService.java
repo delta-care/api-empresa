@@ -10,13 +10,15 @@ import xyz.deltacare.empresa.repository.IEmpresaRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service()
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class EmpresaService implements IEmpresaService {
 
     private final IEmpresaRepository repository;
-    private static final EmpresaMapper empresaMapper = EmpresaMapper.INSTANCE;
+    private static final EmpresaMapper mapper = EmpresaMapper.INSTANCE;
 
     @Override
     public EmpresaDto create(EmpresaDto empresaDto) {
@@ -24,9 +26,9 @@ public class EmpresaService implements IEmpresaService {
                 .ifPresent(empresa -> {
                     throw new EntityExistsException(
                             String.format("Empresa com CNPJ %s já existe.", empresaDto.getCnpj()));});
-        Empresa empresaASerCriada = empresaMapper.toModel(empresaDto);
+        Empresa empresaASerCriada = mapper.toModel(empresaDto);
         Empresa empresaCriada = repository.save(empresaASerCriada);
-        return empresaMapper.toDto(empresaCriada);
+        return mapper.toDto(empresaCriada);
     }
 
     @Override
@@ -34,7 +36,15 @@ public class EmpresaService implements IEmpresaService {
         Empresa empresaEncontrada = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Empresa com id %s não existe.", id)));
-        return empresaMapper.toDto(empresaEncontrada);
+        return mapper.toDto(empresaEncontrada);
+    }
+
+    @Override
+    public List<EmpresaDto> findAll() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toDto)
+                .collect(Collectors.toList());
     }
 
 }

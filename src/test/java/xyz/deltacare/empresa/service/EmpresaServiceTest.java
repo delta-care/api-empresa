@@ -12,6 +12,8 @@ import xyz.deltacare.empresa.repository.IEmpresaRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -136,4 +138,46 @@ class EmpresaServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Deve pesquisar empresas com sucesso.")
+    void pesquisarEmpresasTest() {
+
+        // given | cenário
+        long id = new Random().nextLong();
+        Empresa empresaEncontrada = Empresa.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        EmpresaDto empresaDtoEsperada = EmpresaDto.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(repository.findAll()).thenReturn(Collections.singletonList(empresaEncontrada));
+        List<EmpresaDto> empresaDtoEncontrada = service.findAll();
+
+        // then | verificação
+        assertThat(empresaDtoEncontrada.size()).isEqualTo(1);
+        assertThat(empresaDtoEncontrada.get(0)).isEqualTo(empresaDtoEsperada);
+
+    }
+
+    @Test
+    @DisplayName("Deve pesquisar empresas com sucesso quando não encontrar empresa.")
+    void pesquisarEmpresasVazioTest() {
+
+        // given | cenário
+        List<Empresa> emptyList = Collections.emptyList();
+
+        // when | execução
+        when(repository.findAll()).thenReturn(emptyList);
+        List<EmpresaDto> empresaDtoEncontrada = service.findAll();
+
+        // then | verificação
+        assertThat(empresaDtoEncontrada.size()).isEqualTo(0);
+
+    }
 }
