@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.mapper.EmpresaMapper;
 import xyz.deltacare.empresa.domain.Empresa;
-import xyz.deltacare.empresa.repository.EmpresaRepository;
+import xyz.deltacare.empresa.repository.IEmpresaRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -15,7 +15,7 @@ import javax.persistence.EntityNotFoundException;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class EmpresaService implements IEmpresaService {
 
-    private final EmpresaRepository repository;
+    private final IEmpresaRepository repository;
     private static final EmpresaMapper empresaMapper = EmpresaMapper.INSTANCE;
 
     @Override

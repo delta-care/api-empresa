@@ -5,6 +5,6 @@ import xyz.deltacare.empresa.domain.Empresa;
 
 import java.util.Optional;
 
-public interface EmpresaRepository extends JpaRepository<Empresa, Long> {
+public interface IEmpresaRepository extends JpaRepository<Empresa, Long> {
     Optional<Empresa> findByCnpj(String cnpj);
 }
