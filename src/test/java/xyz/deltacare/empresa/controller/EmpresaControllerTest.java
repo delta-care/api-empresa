@@ -2,10 +2,7 @@ package xyz.deltacare.empresa.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang.RandomStringUtils;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,12 +28,12 @@ class EmpresaControllerTest {
 
     private static final String EMPRESA_API_URI = "/api/v1/empresas";
 
-    @Autowired
-    MockMvc mockMvc;
-
     @MockBean
     @Qualifier("empresaService")
     IEmpresaService service;
+
+    @Autowired
+    MockMvc mockMvc;
 
     @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
@@ -49,8 +46,9 @@ class EmpresaControllerTest {
                 .build();
         String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
+        UUID idCriado = UUID.randomUUID();
         EmpresaDto empresaDtoCriada = EmpresaDto.builder()
-                .id(UUID.randomUUID())
+                .id(idCriado)
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
@@ -67,28 +65,9 @@ class EmpresaControllerTest {
         // then | verificação
         perform
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value(empresaDtoCriada.getId().toString()))
-                .andExpect(jsonPath("cnpj").value(empresaDtoCriada.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresaDtoCriada.getNome()));
-    }
-
-    void criarEmpresaValidDto(EmpresaDto empresaDtoEnviada, String campo) throws Exception {
-
-        // given | cenário
-        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
-
-        // when | execução
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(EMPRESA_API_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(json);
-        ResultActions perform = mockMvc.perform(request);
-
-        // then | verificação
-        perform
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString(campo)));
+                .andExpect(jsonPath("id").value(idCriado.toString()))
+                .andExpect(jsonPath("cnpj").value(empresaDtoEnviada.getCnpj()))
+                .andExpect(jsonPath("nome").value(empresaDtoEnviada.getNome()));
     }
 
     @Test
@@ -104,7 +83,7 @@ class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com cnpj nulo.")
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com cnpj vazio.")
     void criarEmpresaCnpjVazioTest() throws Exception {
 
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
@@ -164,4 +143,22 @@ class EmpresaControllerTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("NOME")));
     }
 
+    void criarEmpresaValidDto(EmpresaDto empresaDtoEnviada, String campo) throws Exception {
+
+        // given | cenário
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(EMPRESA_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(campo)));
+    }
 }

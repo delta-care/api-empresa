@@ -2,6 +2,10 @@ package xyz.deltacare.empresa.service;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,16 +20,15 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 class EmpresaServiceTest {
 
-    @Autowired
-    @Qualifier("empresaService")
-    IEmpresaService service;
-
-    @MockBean
+    @Mock
     EmpresaRepository repository;
+
+    @InjectMocks
+    EmpresaService service;
 
     @Test
     @DisplayName("CRIAR: Deve criar uma empresa.")
