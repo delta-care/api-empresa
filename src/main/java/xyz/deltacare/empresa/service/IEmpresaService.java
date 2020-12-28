@@ -8,4 +8,5 @@ public interface IEmpresaService {
     EmpresaDto create(EmpresaDto any);
     EmpresaDto findById(Long id);
     List<EmpresaDto> findAll();
+    void delete(Long id);
 }

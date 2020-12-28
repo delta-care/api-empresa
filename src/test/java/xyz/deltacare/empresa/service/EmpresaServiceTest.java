@@ -180,4 +180,45 @@ class EmpresaServiceTest {
         assertThat(empresaDtoEncontrada.size()).isEqualTo(0);
 
     }
+
+    @Test
+    @DisplayName("Deve excluir uma empresa com sucesso.")
+    void excluirEmpresaTest() {
+
+        // given | cenário
+        long id = new Random().nextLong();
+        Empresa empresaEncontrada = Empresa.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        doNothing().when(repository).deleteById(id);
+        when(repository.findById(id)).thenReturn(Optional.of(empresaEncontrada));
+        service.delete(id);
+
+        // then | verificação
+        verify(repository, times(1)).deleteById(id);
+        verify(repository, times(1)).findById(id);
+
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro ao tentar excluir uma empresa inexistente.")
+    void excluirEmpresaInexistenteTest() {
+
+        // given | cenário
+        long id = new Random().nextLong();
+
+        // when | execução
+        when(repository.findById(id)).thenReturn(Optional.empty());
+        Throwable exception = Assertions.catchThrowable(() -> service.delete(id));
+
+        // then | verificação
+        assertThat(exception)
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(String.format("Empresa com id %s não existe.", id));
+    }
+
 }

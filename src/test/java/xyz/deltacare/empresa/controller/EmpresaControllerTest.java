@@ -17,6 +17,7 @@ import xyz.deltacare.empresa.service.IEmpresaService;
 import java.util.Collections;
 import java.util.Random;
 
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -122,5 +123,25 @@ class EmpresaControllerTest {
                 .andExpect(jsonPath("$[0].id").value(empresaDtoEncontrada.getId().toString()))
                 .andExpect(jsonPath("$[0].cnpj").value(empresaDtoEncontrada.getCnpj()))
                 .andExpect(jsonPath("$[0].nome").value(empresaDtoEncontrada.getNome()));
+    }
+
+    @Test
+    @DisplayName("Deve excluir empresa com sucesso.")
+    void excluirEmpresaTest() throws Exception {
+
+        // given | cenário
+        long idEnviado = new Random().nextLong();
+
+        // when | execução
+        doNothing().when(service).delete(idEnviado);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .delete(EMPRESA_API_URI + "/" + idEnviado)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isNoContent());
     }
 }

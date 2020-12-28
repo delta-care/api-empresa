@@ -21,7 +21,7 @@ public interface EmpresaControllerDocs {
     @ApiOperation(value = "Pesquisar empresa por ID")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Empresa encontrada com sucesso."),
-            @ApiResponse(code = 404, message = "Código de erro não encontrado.")
+            @ApiResponse(code = 404, message = "Empresa não encontrada.")
     })
     EmpresaDto findById(Long id);
 
@@ -30,4 +30,11 @@ public interface EmpresaControllerDocs {
             @ApiResponse(code = 200, message = "Empresas encontradas com sucesso.")
     })
     List<EmpresaDto> findAll();
+
+    @ApiOperation(value = "Excluir empresa por ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Empresas excluída com sucesso."),
+            @ApiResponse(code = 404, message = "Empresa não encontrada.")
+    })
+    void delete(Long id);
 }

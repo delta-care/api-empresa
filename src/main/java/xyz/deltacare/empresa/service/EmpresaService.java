@@ -22,10 +22,7 @@ public class EmpresaService implements IEmpresaService {
 
     @Override
     public EmpresaDto create(EmpresaDto empresaDto) {
-        repository.findByCnpj(empresaDto.getCnpj())
-                .ifPresent(empresa -> {
-                    throw new EntityExistsException(
-                            String.format("Empresa com CNPJ %s já existe.", empresaDto.getCnpj()));});
+        verifyIfExists(empresaDto);
         Empresa empresaASerCriada = mapper.toModel(empresaDto);
         Empresa empresaCriada = repository.save(empresaASerCriada);
         return mapper.toDto(empresaCriada);
@@ -33,9 +30,7 @@ public class EmpresaService implements IEmpresaService {
 
     @Override
     public EmpresaDto findById(Long id) {
-        Empresa empresaEncontrada = repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("Empresa com id %s não existe.", id)));
+        Empresa empresaEncontrada = verifyAndGet(id);
         return mapper.toDto(empresaEncontrada);
     }
 
@@ -45,6 +40,24 @@ public class EmpresaService implements IEmpresaService {
                 .stream()
                 .map(mapper::toDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void delete(Long id) {
+        verifyAndGet(id);
+        repository.deleteById(id);
+    }
+
+    private void verifyIfExists(EmpresaDto empresaDto) {
+        repository.findByCnpj(empresaDto.getCnpj())
+                .ifPresent(empresa -> {
+                    throw new EntityExistsException(
+                            String.format("Empresa com CNPJ %s já existe.", empresaDto.getCnpj()));});
+    }
+    private Empresa verifyAndGet(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Empresa com id %s não existe.", id)));
     }
 
 }
