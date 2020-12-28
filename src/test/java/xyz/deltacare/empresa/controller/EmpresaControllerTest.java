@@ -143,6 +143,30 @@ class EmpresaControllerTest {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("NOME")));
     }
 
+    @Test
+    @DisplayName("CRIAR: Deve lançar erro ao tentar criar empresa com json desformatado.")
+    void criarEmpresaJsonDesformatadoTest() throws Exception {
+
+        // given | cenário
+        String jsonDesformatado =
+                "{" +
+                    "\"cnpj\" \"38.067.491/0001-60\"," +
+                    "\"nome\" \"Bruno e Oliver Contábil ME\"" +
+                "}";
+
+        // when | execução
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(EMPRESA_API_URI)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(jsonDesformatado);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isBadRequest());
+    }
+
     void criarEmpresaValidDto(EmpresaDto empresaDtoEnviada, String campo) throws Exception {
 
         // given | cenário
