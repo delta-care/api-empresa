@@ -125,6 +125,7 @@
                     src/main/java/**/EmpresaApplication.java,
                     src/main/java/**/config/**,
                     src/main/java/**/domain/**,
+                    src/main/java/**/dto/**,
                     src/main/java/**/mapper/**
                 </sonar.exclusions>
             </properties>

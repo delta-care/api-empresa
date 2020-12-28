@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.exception;
+package xyz.deltacare.empresa.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
