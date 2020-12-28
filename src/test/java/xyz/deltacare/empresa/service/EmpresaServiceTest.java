@@ -48,7 +48,7 @@ class EmpresaServiceTest {
                 .build();
 
         // when | execução
-        when(repository.existsByCnpj(empresaEnviada.getCnpj())).thenReturn(false);
+        when(repository.findByCnpj(empresaEnviada.getCnpj())).thenReturn(Optional.empty());
         when(repository.save(empresaEnviada)).thenReturn(empresaEsperada);
         EmpresaDto empresaDtoCriada = service.create(empresaDtoEnviada);
 
@@ -68,11 +68,15 @@ class EmpresaServiceTest {
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
+        Empresa empresaEncontrada = Empresa.builder()
+                .id(UUID.randomUUID())
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
 
         // when | execução
-        when(repository.existsByCnpj(empresaDto.getCnpj())).thenReturn(true);
+        when(repository.findByCnpj(empresaDto.getCnpj())).thenReturn(Optional.of(empresaEncontrada));
         Throwable exception = Assertions.catchThrowable(() -> service.create(empresaDto));
-
 
         // then | verificação
         assertThat(exception)
