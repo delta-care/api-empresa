@@ -15,4 +15,11 @@ public interface EmpresaControllerDocs {
             @ApiResponse(code = 400, message = "Mensagem de erro a ser definida.")
     })
     EmpresaDto create(EmpresaDto empresaDto);
+
+    @ApiOperation(value = "Pesquisa de empresa por CNPJ")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Empresa encontrada com sucesso."),
+            @ApiResponse(code = 404, message = "Código de erro não encontrado.")
+    })
+    EmpresaDto findById(Long id);
 }

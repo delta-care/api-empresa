@@ -13,7 +13,7 @@ import xyz.deltacare.empresa.repository.EmpresaRepository;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
-import java.util.UUID;
+import java.util.Random;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -42,7 +42,7 @@ class EmpresaServiceTest {
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
         Empresa empresaEsperada = Empresa.builder()
-                .id(UUID.randomUUID())
+                .id(new Random().nextLong())
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
@@ -69,7 +69,7 @@ class EmpresaServiceTest {
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
         Empresa empresaEncontrada = Empresa.builder()
-                .id(UUID.randomUUID())
+                .id(new Random().nextLong())
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
@@ -90,7 +90,7 @@ class EmpresaServiceTest {
     void pesquisarEmpresaTest() {
 
         // given | cenário
-        UUID idEnviado = UUID.randomUUID();
+        Long idEnviado = new Random().nextLong();
         Empresa empresaEncontrada = Empresa.builder()
                 .id(idEnviado)
                 .cnpj("38.067.491/0001-60")
@@ -118,7 +118,7 @@ class EmpresaServiceTest {
     void pesquisarEmpresaComIdInexistenteTest() {
 
         // given | cenário
-        UUID idEnviado = UUID.randomUUID();
+        Long idEnviado = new Random().nextLong();
         EmpresaDto empresaDtoEsperada = EmpresaDto.builder()
                 .id(idEnviado)
                 .cnpj("38.067.491/0001-60")
@@ -128,7 +128,6 @@ class EmpresaServiceTest {
         // when | execução
         when(repository.findById(idEnviado)).thenReturn(Optional.empty());
         Throwable exception = Assertions.catchThrowable(() -> service.findById(idEnviado));
-
 
         // then | verificação
         assertThat(exception)

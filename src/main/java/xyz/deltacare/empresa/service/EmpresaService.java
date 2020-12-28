@@ -10,7 +10,6 @@ import xyz.deltacare.empresa.repository.EmpresaRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.UUID;
 
 @Service()
 @AllArgsConstructor(onConstructor = @__(@Autowired))
@@ -28,7 +27,7 @@ public class EmpresaService implements IEmpresaService {
     }
 
     @Override
-    public EmpresaDto findById(UUID id) {
+    public EmpresaDto findById(Long id) {
         Empresa empresaEncontrada = repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Empresa com id %s não existe.", id)));

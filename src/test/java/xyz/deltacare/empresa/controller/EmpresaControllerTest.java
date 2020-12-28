@@ -15,7 +15,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.IEmpresaService;
 
-import java.util.UUID;
+import java.util.Random;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -36,7 +36,7 @@ class EmpresaControllerTest {
     MockMvc mockMvc;
 
     @Test
-    @DisplayName("CRIAR: Deve criar uma empresa.")
+    @DisplayName("CRIAR: Deve criar uma empresa com sucesso.")
     void criarEmpresaTest() throws Exception {
 
         // given | cenário
@@ -46,7 +46,7 @@ class EmpresaControllerTest {
                 .build();
         String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
-        UUID idCriado = UUID.randomUUID();
+        Long idCriado = new Random().nextLong();
         EmpresaDto empresaDtoCriada = EmpresaDto.builder()
                 .id(idCriado)
                 .cnpj("38.067.491/0001-60")
@@ -185,4 +185,38 @@ class EmpresaControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString(campo)));
     }
+
+    @Test
+    @DisplayName("PESQUISAR: Deve pesquisar uma empresa com sucesso.")
+    void pesquisarEmpresaTest() throws Exception {
+
+        // given | cenário
+        Long idEnviado = new Random().nextLong();
+        EmpresaDto empresaDtoEncontrada = EmpresaDto.builder()
+                .id(idEnviado)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        EmpresaDto empresaDtoEsperada = EmpresaDto.builder()
+                .id(idEnviado)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(service.findById(idEnviado)).thenReturn(empresaDtoEncontrada);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .get(EMPRESA_API_URI + "/" + idEnviado)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(empresaDtoEsperada.getId().toString()))
+                .andExpect(jsonPath("cnpj").value(empresaDtoEsperada.getCnpj()))
+                .andExpect(jsonPath("nome").value(empresaDtoEsperada.getNome()));
+    }
+
 }

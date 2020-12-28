@@ -26,4 +26,7 @@ public class EmpresaController implements EmpresaControllerDocs {
     public EmpresaDto create(@RequestBody @Valid EmpresaDto empresaDto) {
         return service.create(empresaDto);
     }
+
+    @GetMapping("/{id}")
+    public EmpresaDto findById(@PathVariable Long id) { return service.findById(id); }
 }
