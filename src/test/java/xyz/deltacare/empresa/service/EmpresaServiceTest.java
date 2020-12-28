@@ -29,7 +29,7 @@ class EmpresaServiceTest {
     EmpresaService service;
 
     @Test
-    @DisplayName("CRIAR: Deve criar uma empresa com sucesso.")
+    @DisplayName("Deve criar uma empresa com sucesso.")
     void criarEmpresaTest() {
 
         // given | cenário
@@ -60,7 +60,7 @@ class EmpresaServiceTest {
     }
 
     @Test
-    @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    @DisplayName("Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
     void criarEmpresaComCnpjExistente() {
 
         // given | cenário
@@ -86,7 +86,7 @@ class EmpresaServiceTest {
     }
 
     @Test
-    @DisplayName("PESQUISAR: Deve pesquisar uma empresa com sucesso.")
+    @DisplayName("Deve pesquisar uma empresa com sucesso.")
     void pesquisarEmpresaTest() {
 
         // given | cenário
@@ -114,7 +114,7 @@ class EmpresaServiceTest {
     }
 
     @Test
-    @DisplayName("PESQUISAR: Deve lançar erro ao tentar pesquisar empresa por Id que não existe.")
+    @DisplayName("Deve lançar erro ao tentar pesquisar empresa por id existente.")
     void pesquisarEmpresaComIdInexistenteTest() {
 
         // given | cenário

@@ -17,7 +17,7 @@ class EmpresaRepositoryTest {
     EmpresaRepository repository;
 
     @Test
-    @DisplayName("CRIAR: Deve criar uma empresa.")
+    @DisplayName("Deve criar uma empresa com sucesso.")
     void criarEmpresaTest() {
 
         // given | cenário
@@ -35,7 +35,7 @@ class EmpresaRepositoryTest {
     }
 
     @Test
-    @DisplayName("CRIAR: Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
+    @DisplayName("Deve lançar erro quando tentar criar uma empresa com CNPJ existente.")
     void criarEmpresaComCnpjExistente() {
 
         // given | cenário

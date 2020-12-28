@@ -34,7 +34,7 @@ class EmpresaControllerTest {
     MockMvc mockMvc;
 
     @Test
-    @DisplayName("CRIAR: Deve criar uma empresa com sucesso.")
+    @DisplayName("Deve criar uma empresa com sucesso.")
     void criarEmpresaTest() throws Exception {
 
         // given | cenário
@@ -69,7 +69,7 @@ class EmpresaControllerTest {
     }
 
     @Test
-    @DisplayName("PESQUISAR: Deve pesquisar uma empresa com sucesso.")
+    @DisplayName("Deve pesquisar uma empresa com sucesso.")
     void pesquisarEmpresaTest() throws Exception {
 
         // given | cenário

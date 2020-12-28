@@ -7,26 +7,25 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import xyz.deltacare.empresa.controller.EmpresaController;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.IEmpresaService;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.Random;
 
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(EmpresaController.class)
 @TestMethodOrder(MethodOrderer.DisplayName.class)
 class EmpresaExceptionHandlerTest {
 
@@ -34,6 +33,10 @@ class EmpresaExceptionHandlerTest {
 
     @Autowired
     MockMvc mockMvc;
+
+    @MockBean
+    @Qualifier("empresaService")
+    IEmpresaService service;
 
     @Test
     @DisplayName("Deve retornar 400 ao tentar criar empresa com id existente.")
@@ -44,34 +47,30 @@ class EmpresaExceptionHandlerTest {
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
                 .build();
-        String jsonEnviada = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
-        MockHttpServletRequestBuilder requestEnviada = MockMvcRequestBuilders
-                .post(EMPRESA_API_URI)
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON)
-                .content(jsonEnviada);
-        ResultActions perform = mockMvc.perform(requestEnviada);
-        String retorno = perform.andReturn().getResponse().getContentAsString();
-        EmpresaDto empresaDtoCriada = new ObjectMapper().readValue(
-                perform.andReturn().getResponse().getContentAsString(), EmpresaDto.class);
-        String jsonCriada = new ObjectMapper().writeValueAsString(empresaDtoCriada);
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
         // when | execução
+        when(service.create(empresaDtoEnviada)).thenThrow(new EntityExistsException(""));
         MockHttpServletRequestBuilder requestCriada = MockMvcRequestBuilders
                 .post(EMPRESA_API_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
-                .content(jsonCriada);
+                .content(json);
         ResultActions performCriada = mockMvc.perform(requestCriada);
 
         // then | verificação
         performCriada
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("code").exists())
+                .andExpect(jsonPath("status").exists())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("errors").exists());
     }
 
     @Test
-    @DisplayName("Deve retornar 400 ao tentar criar empresa com cnpj vazio.")
-    void criarEmpresaCnpjVazioTest() throws Exception {
+    @DisplayName("Deve retornar 400 ao tentar criar empresa com argumento inválido.")
+    void criarEmpresaArgumentoInvalidoTest() throws Exception {
 
         // given | cenário
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
@@ -91,7 +90,11 @@ class EmpresaExceptionHandlerTest {
         // then | verificação
         perform
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("CNPJ")));
+                .andExpect(jsonPath("code").exists())
+                .andExpect(jsonPath("status").exists())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("errors").exists());
 
     }
 
@@ -102,9 +105,9 @@ class EmpresaExceptionHandlerTest {
         // given | cenário
         String jsonDesformatado =
                 "{" +
-                        "\"cnpj\" \"38.067.491/0001-60\"," +
-                        "\"nome\" \"Bruno e Oliver Contábil ME\"" +
-                        "}";
+                    "\"cnpj\" \"38.067.491/0001-60\"," +
+                    "\"nome\" \"Bruno e Oliver Contábil ME\"" +
+                "}";
 
         // when | execução
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
@@ -116,7 +119,12 @@ class EmpresaExceptionHandlerTest {
 
         // then | verificação
         perform
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("code").exists())
+                .andExpect(jsonPath("status").exists())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("errors").exists());
     }
 
     @Test
@@ -127,6 +135,7 @@ class EmpresaExceptionHandlerTest {
         long idEnviado = new Random().nextLong();
 
         // when | execução
+        when(service.findById(idEnviado)).thenThrow(new EntityNotFoundException(""));
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
                 .get(EMPRESA_API_URI + "/" + idEnviado)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -135,7 +144,12 @@ class EmpresaExceptionHandlerTest {
 
         // then | verificação
         perform
-                .andExpect(status().isNotFound());
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("code").exists())
+                .andExpect(jsonPath("status").exists())
+                .andExpect(jsonPath("timestamp").exists())
+                .andExpect(jsonPath("message").exists())
+                .andExpect(jsonPath("errors").exists());
     }
 
 }
