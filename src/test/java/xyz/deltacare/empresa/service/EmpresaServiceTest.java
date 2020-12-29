@@ -221,4 +221,68 @@ class EmpresaServiceTest {
                 .hasMessage(String.format("Empresa com id %s não existe.", id));
     }
 
+    @Test
+    @DisplayName("Deve atualizar uma empresa com sucesso.")
+    void atualizarEmpresaTest() {
+
+        // given | cenário
+        long id = new Random().nextLong();
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        Empresa empresaEnviada = Empresa.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        Empresa empresaEsperada = Empresa.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(repository.findById(id)).thenReturn(Optional.of(empresaEnviada));
+        when(repository.save(empresaEnviada)).thenReturn(empresaEsperada);
+        EmpresaDto empresaDtoAtualizada = service.updateById(id, empresaDtoEnviada);
+
+        // then | verificação
+        assertThat(empresaDtoAtualizada).isEqualTo(empresaDtoEnviada);
+
+    }
+
+    @Test
+    @DisplayName("Deve lançar erro ao tentar atualizar uma empresa inexistente.")
+    void atualizarEmpresaInexistenteTest() {
+
+        // given | cenário
+        long id = new Random().nextLong();
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        Empresa empresaEnviada = Empresa.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        Empresa empresaEsperada = Empresa.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(repository.findById(id)).thenReturn(Optional.empty());
+        Throwable exception = Assertions.catchThrowable(() -> service.updateById(id, empresaDtoEnviada));
+
+        // then | verificação
+        assertThat(exception)
+                .isInstanceOf(EntityNotFoundException.class)
+                .hasMessage(String.format("Empresa com id %s não existe.", id));
+
+    }
 }

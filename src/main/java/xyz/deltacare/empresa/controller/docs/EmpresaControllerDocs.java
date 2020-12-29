@@ -37,4 +37,12 @@ public interface EmpresaControllerDocs {
             @ApiResponse(code = 404, message = "Empresa não encontrada.")
     })
     void delete(Long id);
+
+    @ApiOperation(value = "Atualizar empresa por ID")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Empresa atualizada com sucesso."),
+            @ApiResponse(code = 404, message = "Empresa não encontrada."),
+            @ApiResponse(code = 400, message = "Campo obrigatório não informado.")
+    })
+    EmpresaDto updateById(Long id, EmpresaDto empresaDto);
 }

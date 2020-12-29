@@ -43,6 +43,15 @@ public class EmpresaService implements IEmpresaService {
     }
 
     @Override
+    public EmpresaDto updateById(Long id, EmpresaDto empresaDto) {
+        Empresa empresaEncontrada = verifyAndGet(id);
+        Empresa empresaAtualizar = mapper.toModel(empresaDto);
+        empresaAtualizar.setCreatedDate(empresaEncontrada.getCreatedDate());
+        Empresa empresaAtualizada = repository.save(empresaAtualizar);
+        return mapper.toDto(empresaAtualizada);
+    }
+
+    @Override
     public void delete(Long id) {
         verifyAndGet(id);
         repository.deleteById(id);
@@ -54,6 +63,7 @@ public class EmpresaService implements IEmpresaService {
                     throw new EntityExistsException(
                             String.format("Empresa com CNPJ %s já existe.", empresaDto.getCnpj()));});
     }
+
     private Empresa verifyAndGet(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(

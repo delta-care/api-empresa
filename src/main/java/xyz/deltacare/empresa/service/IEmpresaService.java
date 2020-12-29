@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface IEmpresaService {
     EmpresaDto create(EmpresaDto any);
+    EmpresaDto updateById(Long id, EmpresaDto empresaDto);
     EmpresaDto findById(Long id);
     List<EmpresaDto> findAll();
     void delete(Long id);

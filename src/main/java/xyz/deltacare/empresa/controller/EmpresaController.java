@@ -44,4 +44,11 @@ public class EmpresaController implements EmpresaControllerDocs {
         service.delete(id);
     }
 
+    @PutMapping("/{id}")
+    public EmpresaDto updateById(
+            @PathVariable Long id,
+            @RequestBody @Valid EmpresaDto empresaDto) {
+        return service.updateById(id, empresaDto);
+    }
+
 }

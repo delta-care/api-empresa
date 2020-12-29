@@ -144,4 +144,41 @@ class EmpresaControllerTest {
         perform
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("Deve atualizar uma empresa com sucesso.")
+    void atualizarEmpresaTest() throws Exception {
+
+        // given | cenário
+        Long id = new Random().nextLong();
+
+        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
+
+        EmpresaDto empresaDtoAtualizada = EmpresaDto.builder()
+                .id(id)
+                .cnpj("38.067.491/0001-60")
+                .nome("Bruno e Oliver Contábil ME")
+                .build();
+
+        // when | execução
+        when(service.updateById(id, empresaDtoEnviada)).thenReturn(empresaDtoAtualizada);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .put(EMPRESA_API_URI + "/" + empresaDtoEnviada.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+        ResultActions perform = mockMvc.perform(request);
+
+        // then | verificação
+        perform
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(empresaDtoEnviada.getId()))
+                .andExpect(jsonPath("cnpj").value(empresaDtoEnviada.getCnpj()))
+                .andExpect(jsonPath("nome").value(empresaDtoEnviada.getNome()));
+    }
 }
