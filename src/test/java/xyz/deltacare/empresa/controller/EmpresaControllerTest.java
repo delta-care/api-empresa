@@ -3,7 +3,6 @@ package xyz.deltacare.empresa.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -12,7 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.dto.EmpresaDto;
-import xyz.deltacare.empresa.service.IEmpresaService;
+import xyz.deltacare.empresa.service.EmpresaService;
 
 import java.util.Collections;
 import java.util.Random;
@@ -29,8 +28,7 @@ class EmpresaControllerTest {
     private static final String EMPRESA_API_URI = "/api/v1/empresas";
 
     @MockBean
-    @Qualifier("empresaService")
-    IEmpresaService service;
+    EmpresaService service;
 
     @Autowired
     MockMvc mockMvc;

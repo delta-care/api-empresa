@@ -1,11 +1,11 @@
 package xyz.deltacare.empresa.controller;
 
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.deltacare.empresa.dto.EmpresaDto;
-import xyz.deltacare.empresa.service.IEmpresaService;
+import xyz.deltacare.empresa.service.EmpresaService;
 import xyz.deltacare.empresa.controller.docs.EmpresaControllerDocs;
 
 import javax.validation.Valid;
@@ -13,14 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/empresas")
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class EmpresaController implements EmpresaControllerDocs {
 
-    private final IEmpresaService service;
-
-    @Autowired
-    public EmpresaController(@Qualifier("empresaService") IEmpresaService service) {
-        this.service = service;
-    }
+    private final EmpresaService service;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)

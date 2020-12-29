@@ -13,14 +13,13 @@ import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service()
+@Service
 @AllArgsConstructor(onConstructor = @__(@Autowired))
-public class EmpresaService implements IEmpresaService {
+public class EmpresaService {
 
     private final IEmpresaRepository repository;
     private static final EmpresaMapper mapper = EmpresaMapper.INSTANCE;
 
-    @Override
     public EmpresaDto create(EmpresaDto empresaDto) {
         verifyIfExists(empresaDto);
         Empresa empresaASerCriada = mapper.toModel(empresaDto);
@@ -28,13 +27,11 @@ public class EmpresaService implements IEmpresaService {
         return mapper.toDto(empresaCriada);
     }
 
-    @Override
     public EmpresaDto findById(Long id) {
         Empresa empresaEncontrada = verifyAndGet(id);
         return mapper.toDto(empresaEncontrada);
     }
 
-    @Override
     public List<EmpresaDto> findAll() {
         return repository.findAll()
                 .stream()
@@ -42,7 +39,6 @@ public class EmpresaService implements IEmpresaService {
                 .collect(Collectors.toList());
     }
 
-    @Override
     public EmpresaDto updateById(Long id, EmpresaDto empresaDto) {
         Empresa empresaEncontrada = verifyAndGet(id);
         Empresa empresaAtualizar = mapper.toModel(empresaDto);
@@ -51,7 +47,6 @@ public class EmpresaService implements IEmpresaService {
         return mapper.toDto(empresaAtualizada);
     }
 
-    @Override
     public void delete(Long id) {
         verifyAndGet(id);
         repository.deleteById(id);
