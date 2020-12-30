@@ -28,4 +28,9 @@ public class Empresa extends Auditable {
     @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false)
+    private Integer produtos;
+
+    @Column(nullable = false)
+    private Integer coberturas;
 }

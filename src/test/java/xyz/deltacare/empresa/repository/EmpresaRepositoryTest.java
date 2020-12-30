@@ -24,6 +24,8 @@ class EmpresaRepositoryTest {
         Empresa empresaExistente = Empresa.builder()
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
+                .produtos(1)
+                .coberturas(2)
                 .build();
         repository.save(empresaExistente);
 

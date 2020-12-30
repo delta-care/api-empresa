@@ -26,4 +26,10 @@ public class EmpresaDto {
     @Size(max = 255)
     private String nome;
 
+    @NotNull
+    private Integer produtos;
+
+    @NotNull
+    private Integer coberturas;
+
 }

@@ -41,6 +41,8 @@ class EmpresaControllerTest {
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
+                .produtos(1)
+                .coberturas(2)
                 .build();
         String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
@@ -49,6 +51,8 @@ class EmpresaControllerTest {
                 .id(idCriado)
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
+                .produtos(1)
+                .coberturas(2)
                 .build();
 
         // when | execução
@@ -154,6 +158,8 @@ class EmpresaControllerTest {
                 .id(id)
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
+                .produtos(1)
+                .coberturas(2)
                 .build();
         String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
@@ -161,6 +167,8 @@ class EmpresaControllerTest {
                 .id(id)
                 .cnpj("38.067.491/0001-60")
                 .nome("Bruno e Oliver Contábil ME")
+                .produtos(1)
+                .coberturas(2)
                 .build();
 
         // when | execução

@@ -74,6 +74,8 @@ class EmpresaExceptionHandlerTest {
         EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
                 .cnpj("")
                 .nome("Bruno e Oliver Contábil ME")
+                .produtos(1)
+                .coberturas(2)
                 .build();
         String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
