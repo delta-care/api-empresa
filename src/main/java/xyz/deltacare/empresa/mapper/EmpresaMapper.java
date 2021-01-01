@@ -3,7 +3,7 @@ package xyz.deltacare.empresa.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import xyz.deltacare.empresa.dto.EmpresaDto;
-import xyz.deltacare.empresa.domain.Empresa;
+import xyz.deltacare.empresa.entity.Empresa;
 
 @Mapper
 public interface EmpresaMapper {

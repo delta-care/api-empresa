@@ -1,7 +1,6 @@
-package xyz.deltacare.empresa.domain;
+package xyz.deltacare.empresa.entity;
 
 import lombok.*;
-import xyz.deltacare.empresa.domain.audit.Auditable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

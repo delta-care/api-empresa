@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.controller.docs;
+package xyz.deltacare.empresa.controller;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

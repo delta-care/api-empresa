@@ -3,7 +3,7 @@ package xyz.deltacare.empresa.repository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import xyz.deltacare.empresa.domain.Empresa;
+import xyz.deltacare.empresa.entity.Empresa;
 
 import java.util.Optional;
 
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class EmpresaRepositoryTest {
 
     @Autowired
-    IEmpresaRepository repository;
+    EmpresaRepository repository;
 
     @Test
     @DisplayName("Deve pesquisar uma empresa por CNPJ.")

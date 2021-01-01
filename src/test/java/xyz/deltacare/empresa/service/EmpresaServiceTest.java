@@ -7,8 +7,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.deltacare.empresa.dto.EmpresaDto;
-import xyz.deltacare.empresa.domain.Empresa;
-import xyz.deltacare.empresa.repository.IEmpresaRepository;
+import xyz.deltacare.empresa.entity.Empresa;
+import xyz.deltacare.empresa.repository.EmpresaRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.*;
 class EmpresaServiceTest {
 
     @Mock
-    IEmpresaRepository repository;
+    EmpresaRepository repository;
 
     @InjectMocks
     EmpresaService service;

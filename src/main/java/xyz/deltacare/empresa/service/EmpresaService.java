@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.mapper.EmpresaMapper;
-import xyz.deltacare.empresa.domain.Empresa;
-import xyz.deltacare.empresa.repository.IEmpresaRepository;
+import xyz.deltacare.empresa.entity.Empresa;
+import xyz.deltacare.empresa.repository.EmpresaRepository;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor(onConstructor = @__(@Autowired))
 public class EmpresaService {
 
-    private final IEmpresaRepository repository;
+    private final EmpresaRepository repository;
     private static final EmpresaMapper mapper = EmpresaMapper.INSTANCE;
 
     public EmpresaDto create(EmpresaDto empresaDto) {

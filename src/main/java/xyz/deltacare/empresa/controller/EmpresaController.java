@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.EmpresaService;
-import xyz.deltacare.empresa.controller.docs.EmpresaControllerDocs;
 
 import javax.validation.Valid;
 import java.util.List;
