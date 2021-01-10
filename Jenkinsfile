@@ -57,7 +57,7 @@ podTemplate(
             }
         }
 
-        stage('Docker Hub') {
+        stage('Release') {
             container('docker') {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-jdscio', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
                     sh "docker build -t ${IMAGE_NAME_DOCKER}:${APP_VERSION} ."
