@@ -10,7 +10,7 @@ podTemplate(
     ],
     volumes: [
         hostPathVolume(hostPath: '/var/run/docker.sock',mountPath: '/var/run/docker.sock'),
-        persistentVolumeClaim(mountPath: '/root/jenkins/.m2/', claimName: 'maven-repo', readOnly: false)
+        persistentVolumeClaim(mountPath: '/home/jenkins/.m2/', claimName: 'maven-repo', readOnly: false)
     ]
 )
 {
