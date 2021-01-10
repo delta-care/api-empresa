@@ -46,15 +46,12 @@ podTemplate(
             }
         }
 
-        stage('Sonar Analysis') {
+        stage('Code Analysis') {
             container('maven') {
                 withSonarQubeEnv(installationName: 'SonarCloudServer') {
                     sh 'mvn jacoco:report org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -P sonar'
                 }
             }
-        }
-
-        stage("Quality Gate") {
             timeout(time: 1, unit: 'MINUTES') {
                 waitForQualityGate abortPipeline: true
             }
