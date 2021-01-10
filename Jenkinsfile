@@ -34,7 +34,7 @@ podTemplate(
             APP_VERSION = props.version
         }
 
-        stage('Package') {
+        stage('Build') {
             container('maven') {
                 sh 'mvn clean package -D skipTests=true'
             }
