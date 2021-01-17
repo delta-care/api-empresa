@@ -6,7 +6,7 @@ podTemplate(
     containers: [
         containerTemplate(name: 'docker',image: 'docker',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent'),
         containerTemplate(name: 'helm',image: 'dtzar/helm-kubectl:3.4.1',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent'),
-        containerTemplate(name: 'maven',image: 'maven:3.6.3-amazoncorretto-11',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/.m2')
+        containerTemplate(name: 'maven',image: 'maven:3.6.3-amazoncorretto-11',command: '/bin/sh -c',args: 'cat',ttyEnabled: true,workingDir: '/home/jenkins/agent')
     ],
     volumes: [
         hostPathVolume(hostPath: '/var/run/docker.sock',mountPath: '/var/run/docker.sock'),
