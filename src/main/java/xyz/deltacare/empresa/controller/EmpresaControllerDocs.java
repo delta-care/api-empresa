@@ -6,8 +6,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 
-import java.util.List;
-
 @Api("Gestão de Empresas")
 public interface EmpresaControllerDocs {
 
@@ -29,7 +27,7 @@ public interface EmpresaControllerDocs {
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Empresas encontradas com sucesso.")
     })
-    List<EmpresaDto> findAll();
+    String findAll();
 
     @ApiOperation(value = "Excluir empresa por ID")
     @ApiResponses(value = {

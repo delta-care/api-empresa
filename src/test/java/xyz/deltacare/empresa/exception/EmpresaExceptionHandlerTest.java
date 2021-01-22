@@ -25,7 +25,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(EmpresaController.class)
-@TestMethodOrder(MethodOrderer.DisplayName.class)
 class EmpresaExceptionHandlerTest {
 
     private static final String EMPRESA_API_URI = "/api/v1/empresas";

@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-@TestMethodOrder(MethodOrderer.DisplayName.class)
 class EmpresaServiceTest {
 
     @Mock

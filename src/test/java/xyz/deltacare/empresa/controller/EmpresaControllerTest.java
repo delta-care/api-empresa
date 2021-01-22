@@ -22,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(EmpresaController.class)
-@TestMethodOrder(MethodOrderer.DisplayName.class)
 class EmpresaControllerTest {
 
     private static final String EMPRESA_API_URI = "/api/v1/empresas";
