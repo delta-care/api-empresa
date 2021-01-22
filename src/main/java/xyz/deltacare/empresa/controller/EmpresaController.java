@@ -37,7 +37,7 @@ public class EmpresaController implements EmpresaControllerDocs {
 
     @GetMapping
     public String findAll() {
-        return core + " " + max;
+        return core + " : " + max;
     }
 
     @DeleteMapping("/{id}")

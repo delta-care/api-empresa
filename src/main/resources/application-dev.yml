@@ -21,8 +21,7 @@ spring:
         name: api-empresa
       reload:
         enabled: true
-        mode: polling
-        period: 2000
+        strategy: restart_context
 
 logging:
   level:
