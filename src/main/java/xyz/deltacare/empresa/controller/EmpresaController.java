@@ -1,8 +1,8 @@
 package xyz.deltacare.empresa.controller;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import xyz.deltacare.empresa.configuration.PropsConfig;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.EmpresaService;
 
@@ -13,16 +13,12 @@ import javax.validation.Valid;
 public class EmpresaController implements EmpresaControllerDocs {
 
     private final EmpresaService service;
+    private final PropsConfig propsConfig;
 
-    public EmpresaController(EmpresaService service) {
+    public EmpresaController(EmpresaService service, PropsConfig propsConfig) {
         this.service = service;
+        this.propsConfig = propsConfig;
     }
-
-    @Value( "${pool.size.core}" )
-    private String core;
-
-    @Value( "${pool.size.max}" )
-    private String max;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -37,7 +33,7 @@ public class EmpresaController implements EmpresaControllerDocs {
 
     @GetMapping
     public String findAll() {
-        return core + " : " + max;
+        return propsConfig.getCore() + " : " + propsConfig.getMax();
     }
 
     @DeleteMapping("/{id}")

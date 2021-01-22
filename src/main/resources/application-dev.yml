@@ -21,7 +21,6 @@ spring:
         name: api-empresa
       reload:
         enabled: true
-        strategy: restart_context
 
 logging:
   level:
