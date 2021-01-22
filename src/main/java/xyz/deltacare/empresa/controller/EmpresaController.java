@@ -1,7 +1,5 @@
 package xyz.deltacare.empresa.controller;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,10 +10,13 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/v1/empresas")
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class EmpresaController implements EmpresaControllerDocs {
 
     private final EmpresaService service;
+
+    public EmpresaController(EmpresaService service) {
+        this.service = service;
+    }
 
     @Value( "${pool.size.core}" )
     private String core;
