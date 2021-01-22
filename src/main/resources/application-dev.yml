@@ -15,6 +15,12 @@ spring:
   h2:
     console:
       enabled: true
+  cloud:
+    kubernetes:
+      config:
+        name: api-empresa
+      reload:
+        enabled: true
 
 logging:
   level:
