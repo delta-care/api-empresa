@@ -34,13 +34,13 @@ podTemplate(
             def props = readMavenPom file: 'pom.xml'
             APP_VERSION = props.version
         }
-        /*
+        
         stage('Build') {
             container('maven') {
                 sh 'mvn clean package -D skipTests=true'
             }
         }
-         
+        /* 
         stage('Unit Test') {
             container('maven') {
                 sh 'mvn test'
