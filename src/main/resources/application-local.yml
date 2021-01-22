@@ -1,6 +1,4 @@
 spring:
-  application:
-    name: api-empresa
   datasource:
     url: jdbc:h2:mem:empresa_dev;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driverClassName: org.h2.Driver
@@ -15,15 +13,7 @@ spring:
   h2:
     console:
       enabled: true
-  cloud:
-    kubernetes:
-      config:
-        name: api-empresa
-      reload:
-        enabled: true
 
-logging:
-  level:
-    xyz:
-      deltacare:
-        empresa: DEBUG
+app:
+  core: 1
+  max: 16

@@ -7,6 +7,7 @@ import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.EmpresaService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/empresas")
@@ -32,8 +33,8 @@ public class EmpresaController implements EmpresaControllerDocs {
     }
 
     @GetMapping
-    public String findAll() {
-        return propsConfig.getCore() + " : " + propsConfig.getMax();
+    public List<EmpresaDto> findAll() {
+        return service.findAll();
     }
 
     @DeleteMapping("/{id}")
