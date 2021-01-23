@@ -9,8 +9,7 @@ k8s:
   namespace:
   
 image:
-  repository: deltacare/api-empresa
-  pullPolicy: 
+  repository: deltacare/api-empresa 
   tag:
   
 service:
