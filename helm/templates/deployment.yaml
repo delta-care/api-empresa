@@ -4,23 +4,23 @@ metadata:
   name: api-empresa
   labels:
     app: api-empresa
-    version: 0.1.0
+    version: {{.Values.image.tag}}
 spec:
   replicas: 1
   selector:
     matchLabels:
       app: api-empresa
-      version: 0.1.0
+      version: {{.Values.image.tag}}
   template:
     metadata:
       labels:
         app: api-empresa
-        version: 0.1.0
+        version: {{.Values.image.tag}}
     spec:
       serviceAccountName: api-empresa
       containers:
       - name: api-empresa
-        image: deltacare/api-empresa:0.2.0
+        image: deltacare/api-empresa:{{.Values.image.tag}}
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
