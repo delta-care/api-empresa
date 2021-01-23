@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: reader-cm
+subjects:
+- kind: User
+  name: "system:serviceaccount:dev:api-empresa"
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: api-empresa
+  apiGroup: rbac.authorization.k8s.io

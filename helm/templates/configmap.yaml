@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: api-empresa
+data:
+  application.properties: |-
+    app.core=1
+    app.max=16
