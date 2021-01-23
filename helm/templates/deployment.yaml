@@ -1,26 +1,35 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: api-empresa
+  name: {{.Values.app.name}}
   labels:
-    app: api-empresa
+    app: {{.Values.app.name}}
     version: {{.Values.image.tag}}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: api-empresa
+      app: {{.Values.app.name}}
       version: {{.Values.image.tag}}
   template:
     metadata:
       labels:
-        app: api-empresa
+        app: {{.Values.app.name}}
         version: {{.Values.image.tag}}
     spec:
-      serviceAccountName: api-empresa
+      serviceAccountName: {{.Values.app.name}}
       containers:
-      - name: api-empresa
-        image: deltacare/api-empresa:{{.Values.image.tag}}
-        imagePullPolicy: IfNotPresent
+      - name: {{.Values.app.name}}
+        image: {{.Values.image.repository}}:{{.Values.image.tag}}
+        imagePullPolicy: {{.Values.image.pullPolicy}}
         ports:
-        - containerPort: 8080
+          - containerPort: {{.Values.service.port}}
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: {{.Values.health.path}}
+            port: {{.Values.service.port}}
+        readinessProbe:
+          httpGet:
+            path: {{.Values.health.path}}
+            port: {{.Values.service.port}}
