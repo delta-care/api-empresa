@@ -20,7 +20,7 @@ spec:
         - destination:
             host: {{.Values.app.name}}
             port:
-              number: 8080
+              number: {{.Values.service.port}}
     - match:
         - uri:
             prefix: /api/v1/empresas/
@@ -31,4 +31,4 @@ spec:
         - destination:
             host: {{.Values.app.name}}
             port:
-              number: 8080
+              number: {{.Values.service.port}}
