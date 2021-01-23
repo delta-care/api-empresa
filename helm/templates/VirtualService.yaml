@@ -1,0 +1,34 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: {{.Values.app.name}}
+spec:
+  hosts:
+    - dev.deltacare.xyz
+  gateways:
+    - gateway
+  http:
+    - match:
+        - uri:
+            exact: /api/v1/empresas
+        - uri:
+            exact: /api/v1/empresas/
+        - uri:
+            regex: '/api/v1/empresas/[0-9]+'
+      name: {{.Values.app.name}}
+      route:
+        - destination:
+            host: {{.Values.app.name}}
+            port:
+              number: 8080
+    - match:
+        - uri:
+            prefix: /api/v1/empresas/
+      name: {{.Values.app.name}}-swagger
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: {{.Values.app.name}}
+            port:
+              number: 8080

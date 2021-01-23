@@ -1,0 +1,11 @@
+apiVersion: "security.istio.io/v1beta1"
+kind: RequestAuthentication
+metadata:
+  name: {{.Values.app.name}}
+spec:
+  selector:
+    matchLabels:
+      app: {{.Values.app.name}}
+  jwtRules:
+  - issuer: http://sso.deltacare.xyz/auth/realms/Deltacare
+    jwksUri: http://sso.deltacare.xyz/auth/realms/Deltacare/protocol/openid-connect/certs
