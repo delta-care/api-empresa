@@ -40,7 +40,7 @@ podTemplate(
                 sh 'mvn clean package -D skipTests=true'
             }
         }
-        /* 
+        
         stage('Unit Test') {
             container('maven') {
                 sh 'mvn test'
@@ -57,7 +57,7 @@ podTemplate(
                 waitForQualityGate abortPipeline: true
             }
         }
-        */
+        
         stage('Release') {
             container('docker') {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
@@ -67,17 +67,16 @@ podTemplate(
                 }
             }
         }
-        /*
+        
         stage('Deploy DEV') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
-                sh "helm upgrade ${APP_NAME} ./helm --install --namespace ${K8S_NAMESPACE} --set image.tag=${APP_VERSION} --set ingress.hosts[0].host=${SUBDOMAIN}.${DOMAIN} --set ingress.hosts[0].paths[0].path=${PATH}"
+                sh "helm upgrade ${APP_NAME} ./helm --install --namespace ${K8S_NAMESPACE} --set image.tag=${APP_VERSION} --set k8s.namespace=${K8S_NAMESPACE}"
                 sh "helm repo add deltacare ${URL_REPO_CHART}"
                 sh "helm plugin install ${URL_REPO_HPUSH}"
                 sh "helm push helm/ deltacare"
                 sh "helm repo update"
             }
         }
-        */
     }
 }
