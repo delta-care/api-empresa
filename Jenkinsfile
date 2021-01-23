@@ -24,9 +24,6 @@ podTemplate(
         def IMAGE_NAME_DOCKER="deltacare/${APP_NAME}"
         def IMAGE_NAME_CHART="deltacare/${APP_NAME}"
         def K8S_NAMESPACE='dev'
-        def SUBDOMAIN='dev'
-        def DOMAIN='deltacare.xyz'
-        def PATH='/api/v1/empresas'
         def OBJ_REPO_GIT
         
         stage('Checkout') {
