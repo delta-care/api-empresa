@@ -26,13 +26,13 @@ podTemplate(
         def IMAGE_NAME_CHART="deltacare/${APP_NAME}"
         def K8S_NAMESPACE='dev'
         def OBJ_REPO_GIT
-        /*
+        
         stage('Checkout') {
             OBJ_REPO_GIT = git branch: 'main', credentialsId: 'github', url: URL_REPO_GIT
             def props = readMavenPom file: 'pom.xml'
             APP_VERSION = props.version
         }
-        
+        /*
         stage('Build') {
             container('maven') {
                 sh 'mvn clean package -D skipTests=true'
