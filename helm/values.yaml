@@ -1,17 +1,13 @@
 # k8s.namespace e image.tag definidos via jenkins
-
 app:
   name: api-empresa
   health:
     path: /actuator/health
-    
 k8s:
   namespace:
-  
 image:
   repository: deltacare/api-empresa 
   tag:
-  
 service:
   type: ClusterIP
   port: 8080
