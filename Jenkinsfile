@@ -32,7 +32,7 @@ podTemplate(
             def props = readMavenPom file: 'pom.xml'
             APP_VERSION = props.version
         }
-        /*
+        
         stage('Build') {
             container('maven') {
                 sh 'mvn clean package -D skipTests=true'
@@ -65,7 +65,7 @@ podTemplate(
                 }
             }
         }
-        */
+        
         stage('Deploy DEV') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
