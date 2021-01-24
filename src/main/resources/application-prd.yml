@@ -1,21 +1,21 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:empresa_dev;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    driverClassName: org.h2.Driver
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      max-lifetime: 600000
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-  h2:
-    console:
-      enabled: true
   cloud:
     kubernetes:
       config:
         name: api-empresa
       reload:
         enabled: true
+management:
+  metrics:
+    enable:
+      root: true
+  endpoints:
+    web:
+      exposure:
+        include: info, health, metrics
