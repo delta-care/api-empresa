@@ -55,6 +55,14 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
@@ -130,17 +138,6 @@
                     </annotationProcessorPaths>
                 </configuration>
             </plugin>
-            <!--<plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <configuration>
-                    <driver>com.mysql.cj.jdbc.Driver</driver>
-                    <url>jdbc:mysql://empresa-dev.cacvwucgqxal.us-east-2.rds.amazonaws.com</url>
-                    <user>admin</user>
-                    <password>admin123</password>
-                    <schemas>empresa</schemas>
-                </configuration>
-            </plugin>-->
         </plugins>
     </build>
 
