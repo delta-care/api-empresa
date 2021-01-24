@@ -26,7 +26,7 @@ podTemplate(
         def IMAGE_NAME_CHART="deltacare/${APP_NAME}"
         def K8S_NAMESPACE='dev'
         def OBJ_REPO_GIT
-        
+        /*
         stage('Checkout') {
             OBJ_REPO_GIT = git branch: 'main', credentialsId: 'github', url: URL_REPO_GIT
             def props = readMavenPom file: 'pom.xml'
@@ -65,7 +65,7 @@ podTemplate(
                 }
             }
         }
-        
+        */
         stage('Deploy DEV') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
