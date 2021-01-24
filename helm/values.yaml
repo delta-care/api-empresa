@@ -1,6 +1,7 @@
-# k8s.namespace e image.tag definidos via jenkins
+# app.profile, k8s.namespace e image.tag definidos via jenkins
 app:
   name: api-empresa
+  profile:
   health:
     path: /actuator/health
 k8s:
