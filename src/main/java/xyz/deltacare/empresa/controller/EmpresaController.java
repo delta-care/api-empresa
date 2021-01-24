@@ -2,7 +2,6 @@ package xyz.deltacare.empresa.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import xyz.deltacare.empresa.configuration.PropsConfig;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.EmpresaService;
 
@@ -14,11 +13,9 @@ import java.util.List;
 public class EmpresaController implements EmpresaControllerDocs {
 
     private final EmpresaService service;
-    private final PropsConfig propsConfig;
 
-    public EmpresaController(EmpresaService service, PropsConfig propsConfig) {
+    public EmpresaController(EmpresaService service) {
         this.service = service;
-        this.propsConfig = propsConfig;
     }
 
     @PostMapping

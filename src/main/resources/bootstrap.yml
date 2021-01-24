@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: api-empresa
+  profiles:
+    active: dev
+  cloud:
+    kubernetes:
+      config:
+        enabled: false

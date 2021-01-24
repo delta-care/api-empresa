@@ -1,5 +1,0 @@
-spring:
-  application:
-    name: api-empresa
-  profiles:
-    active: k8s
