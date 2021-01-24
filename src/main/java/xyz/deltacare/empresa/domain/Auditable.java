@@ -1,4 +1,4 @@
-package xyz.deltacare.empresa.entity;
+package xyz.deltacare.empresa.domain;
 
 import lombok.Getter;
 import lombok.Setter;

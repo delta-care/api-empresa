@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import xyz.deltacare.empresa.dto.EmpresaDto;
-import xyz.deltacare.empresa.entity.Empresa;
+import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.repository.EmpresaRepository;
 
 import javax.persistence.EntityExistsException;
@@ -21,13 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class EmpresaServiceTest {
+class EmpresaServiceSpaTest {
 
     @Mock
     EmpresaRepository repository;
 
     @InjectMocks
-    EmpresaService service;
+    EmpresaServiceSpa service;
 
     @Test
     @DisplayName("Deve criar uma empresa com sucesso.")

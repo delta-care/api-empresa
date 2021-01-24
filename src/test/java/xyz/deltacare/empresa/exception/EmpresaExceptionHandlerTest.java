@@ -2,9 +2,7 @@ package xyz.deltacare.empresa.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,7 +14,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.controller.EmpresaController;
 import xyz.deltacare.empresa.dto.EmpresaDto;
-import xyz.deltacare.empresa.service.EmpresaService;
+import xyz.deltacare.empresa.service.EmpresaServiceSpa;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -35,7 +33,7 @@ class EmpresaExceptionHandlerTest {
     MockMvc mockMvc;
 
     @MockBean
-    EmpresaService service;
+    EmpresaServiceSpa service;
 
     @Test
     @DisplayName("Deve retornar 400 ao tentar criar empresa com id existente.")

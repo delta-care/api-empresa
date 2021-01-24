@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import xyz.deltacare.empresa.dto.EmpresaDto;
-import xyz.deltacare.empresa.service.EmpresaService;
+import xyz.deltacare.empresa.service.EmpresaServiceSpa;
 
 import java.util.Collections;
 import java.util.Random;
@@ -29,7 +29,7 @@ class EmpresaControllerTest {
     private static final String EMPRESA_API_URI = "/api/v1/empresas";
 
     @MockBean
-    EmpresaService service;
+    EmpresaServiceSpa service;
 
     @Autowired
     MockMvc mockMvc;

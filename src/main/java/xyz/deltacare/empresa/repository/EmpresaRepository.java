@@ -1,7 +1,7 @@
 package xyz.deltacare.empresa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import xyz.deltacare.empresa.entity.Empresa;
+import xyz.deltacare.empresa.domain.Empresa;
 
 import java.util.Optional;
 
