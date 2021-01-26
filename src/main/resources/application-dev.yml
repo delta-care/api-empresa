@@ -30,11 +30,6 @@ spring:
     multipart:
       max-file-size: 100MB
       max-request-size: 100MB
-aws:
-  endpointUrl: https://s3.us-east-2.amazonaws.com
-  accessKey: AKIAVNJ4VXNKWLLXNSB7
-  secretKey: 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
-  bucketName: dc-boletos-dev
 logging:
   level:
     root: INFO
