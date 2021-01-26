@@ -7,6 +7,7 @@ spring:
     hikari:
       max-lifetime: 600000
   flyway:
+    enabled: true
     url: jdbc:mysql://empresa-dev.cacvwucgqxal.us-east-2.rds.amazonaws.com
     user: admin
     password: admin123
@@ -25,6 +26,15 @@ spring:
     host: 3.128.159.68
     port: 6379
     password:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+aws:
+  endpointUrl: https://s3.us-east-2.amazonaws.com
+  accessKey: AKIAVNJ4VXNKWLLXNSB7
+  secretKey: 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
+  bucketName: dc-boletos-dev
 logging:
   level:
     root: INFO
