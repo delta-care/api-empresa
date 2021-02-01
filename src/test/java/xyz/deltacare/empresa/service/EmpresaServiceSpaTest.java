@@ -156,8 +156,10 @@ class EmpresaServiceSpaTest {
         // setUp
 
         // when | execução
+        when(produtoRepository.save(any(Produto.class))).thenReturn(produtoRetornado);
+        when(beneficiarioRepository.save(any(Beneficiario.class))).thenReturn(beneficiarioRetornado);
         when(empresaRepository.save(any(Empresa.class))).thenReturn(this.empresaRetornada);
-        EmpresaDto empresaDtoAtualizada = service.salvar(this.empresaDtoRetornada);
+        EmpresaDto empresaDtoAtualizada = service.atualizar(this.empresaDtoRetornada);
 
         // then | verificação
         assertThat(empresaDtoAtualizada).isEqualTo(empresaDtoRetornada);
