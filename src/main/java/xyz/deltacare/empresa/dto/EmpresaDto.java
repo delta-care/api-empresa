@@ -1,14 +1,14 @@
 package xyz.deltacare.empresa.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,10 +16,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class EmpresaDto implements Serializable {
 
-    private Long id;
+    private String id;
 
     @NotNull
     @NotEmpty
+    @Size(max = 255)
     private String cnpj;
 
     @NotNull
@@ -28,9 +29,38 @@ public class EmpresaDto implements Serializable {
     private String nome;
 
     @NotNull
-    private Integer produtos;
+    @NotEmpty
+    @Email
+    private String email;
 
     @NotNull
-    private Integer coberturas;
+    @NotEmpty
+    @Size(max = 255)
+    private String logradouro;
+
+    @NotNull
+    @NotEmpty
+    @Size(max = 255)
+    private String bairro;
+
+    @NotNull
+    @NotEmpty
+    @Size(max = 255)
+    private String uf;
+
+    @NotNull
+    @NotEmpty
+    @Size(max = 255)
+    private String cep;
+
+    @NotNull
+    @NotEmpty
+    @JsonProperty("produtos")
+    private List<ProdutoDto> produtos;
+
+    @NotNull
+    @NotEmpty
+    @JsonProperty("beneficiarios")
+    private List<BeneficiarioDto> beneficiarios;
 
 }

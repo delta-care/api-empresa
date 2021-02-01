@@ -1,5 +1,9 @@
 package xyz.deltacare.empresa.controller;
 
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import xyz.deltacare.empresa.dto.EmpresaDto;
@@ -10,41 +14,34 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/empresas")
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 public class EmpresaController implements EmpresaControllerDocs {
 
     private final EmpresaService service;
 
-    public EmpresaController(EmpresaService service) {
-        this.service = service;
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EmpresaDto create(@RequestBody @Valid EmpresaDto empresaDto) {
-        return service.create(empresaDto);
-    }
-
-    @GetMapping("/{id}")
-    public EmpresaDto findById(@PathVariable Long id) {
-        return service.findById(id);
+    public EmpresaDto criar(@RequestBody @Valid EmpresaDto empresaDto) {
+        return service.criar(empresaDto);
     }
 
     @GetMapping
-    public List<EmpresaDto> findAll() {
-        return service.findAll();
+    @ResponseStatus(HttpStatus.OK)
+    public List<EmpresaDto> pesquisar(
+            @RequestParam(value="page", required = false, defaultValue = "0") int page,
+            @RequestParam(value="limit", required = false, defaultValue = "10") int limit,
+            @RequestParam(value="codigo", required = false, defaultValue = "") String id,
+            @RequestParam(value="nome", required = false, defaultValue = "") String nome,
+            @RequestParam(value="cnpj", required = false, defaultValue = "") String cnpj
+    ) {
+        Pageable pageable = PageRequest.of(page, limit);
+        return service.pesquisar(pageable, id, cnpj, nome);
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        service.delete(id);
-    }
-
-    @PutMapping("/{id}")
-    public EmpresaDto updateById(
-            @PathVariable Long id,
-            @RequestBody @Valid EmpresaDto empresaDto) {
-        return service.updateById(id, empresaDto);
+    @PutMapping
+    @ResponseStatus(HttpStatus.OK)
+    public EmpresaDto atualizar(@RequestBody @Valid EmpresaDto empresaDto) {
+        return service.atualizar(empresaDto);
     }
 
 }

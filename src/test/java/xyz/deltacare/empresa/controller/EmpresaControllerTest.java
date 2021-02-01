@@ -1,65 +1,74 @@
 package xyz.deltacare.empresa.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import xyz.deltacare.empresa.builder.EmpresaDtoBuilder;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.service.EmpresaServiceSpa;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
+import java.util.List;
 
-import static org.mockito.Mockito.doNothing;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles("test")
-@WebMvcTest(EmpresaController.class)
+@ExtendWith(MockitoExtension.class)
 class EmpresaControllerTest {
 
-    private static final String EMPRESA_API_URI = "/api/v1/empresas";
+    @Mock private EmpresaServiceSpa service;
+    @InjectMocks private EmpresaController controller;
 
-    @MockBean
-    EmpresaServiceSpa service;
+    private MockMvc mockMvc;
+    private Pageable pageable;
+    private ObjectMapper objectMapper;
+    private EmpresaDto empresaDtoEnviada;
+    private List<EmpresaDto> empresaDtoRetornada;
+    private final String EMPRESA_API_URI = "/api/v1/empresas";
 
-    @Autowired
-    MockMvc mockMvc;
+    @BeforeEach
+    void setUp() {
+        objectMapper = new ObjectMapper();
+        pageable = PageRequest.of(0, 10);
+        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+
+        empresaDtoEnviada = EmpresaDtoBuilder.builder().build().buildEmpresaDto();
+        empresaDtoRetornada = Collections.singletonList(EmpresaDtoBuilder.builder().id("637832").build().buildEmpresaDto());
+    }
 
     @Test
-    @DisplayName("Deve criar uma empresa com sucesso.")
+    @DisplayName("Deve tentar criar empresa e retornar 201 com dados iguais")
     void criarEmpresaTest() throws Exception {
 
         // given | cenário
-        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
-                .cnpj("38.067.491/0001-60")
-                .nome("Bruno e Oliver Contábil ME")
-                .produtos(1)
-                .coberturas(2)
-                .build();
         String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
 
-        Long idCriado = new Random().nextLong();
-        EmpresaDto empresaDtoCriada = EmpresaDto.builder()
-                .id(idCriado)
-                .cnpj("38.067.491/0001-60")
-                .nome("Bruno e Oliver Contábil ME")
-                .produtos(1)
-                .coberturas(2)
-                .build();
-
         // when | execução
-        when(service.create(empresaDtoEnviada)).thenReturn(empresaDtoCriada);
-        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .post(EMPRESA_API_URI)
+        when(service.criar(empresaDtoEnviada)).thenReturn(empresaDtoRetornada.get(0));
+        MockHttpServletRequestBuilder request = post(EMPRESA_API_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
@@ -67,115 +76,93 @@ class EmpresaControllerTest {
 
         // then | verificação
         perform
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("id").value(idCriado.toString()))
-                .andExpect(jsonPath("cnpj").value(empresaDtoEnviada.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresaDtoEnviada.getNome()));
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isCreated());
+        assertThat(retornoItemParaString(perform.andReturn()))
+                .isEqualTo(itemParaStringIso(empresaDtoRetornada.get(0)));
+
     }
 
     @Test
-    @DisplayName("Deve pesquisar uma empresa com sucesso.")
-    void pesquisarEmpresaTest() throws Exception {
+    @DisplayName("Deve tentar pesquisar empresa por codigo e retornar 200 com dados iguais")
+    void pesquisarEmpresaPorCodigoTest() throws Exception {
 
         // given | cenário
-        Long idEnviado = new Random().nextLong();
-        EmpresaDto empresaDtoEncontrada = EmpresaDto.builder()
-                .id(idEnviado)
-                .cnpj("38.067.491/0001-60")
-                .nome("Bruno e Oliver Contábil ME")
-                .build();
+        String codigoEnviado = empresaDtoRetornada.get(0).getId();
 
         // when | execução
-        when(service.findById(idEnviado)).thenReturn(empresaDtoEncontrada);
+        when(service.pesquisar(pageable, codigoEnviado, "", "")).thenReturn(empresaDtoRetornada);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(EMPRESA_API_URI + "/" + idEnviado)
+                .get(EMPRESA_API_URI + "/?codigo=" + codigoEnviado)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
         ResultActions perform = mockMvc.perform(request);
 
         // then | verificação
         perform
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(empresaDtoEncontrada.getId().toString()))
-                .andExpect(jsonPath("cnpj").value(empresaDtoEncontrada.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresaDtoEncontrada.getNome()));
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+        assertThat(retornoListaParaString(perform.andReturn()))
+                .isEqualTo(listaParaStringIso(empresaDtoRetornada));
     }
 
     @Test
-    @DisplayName("Deve pesquisar empresas com sucesso.")
-    void pesquisarEmpresasTest() throws Exception {
+    @DisplayName("Deve tentar pesquisar empresa por cnpj e retornar 200 com dados iguais")
+    void pesquisarEmpresaPorCnpjTest() throws Exception {
 
         // given | cenário
-        EmpresaDto empresaDtoEncontrada = EmpresaDto.builder()
-                .id(new Random().nextLong())
-                .cnpj("38.067.491/0001-60")
-                .nome("Bruno e Oliver Contábil ME")
-                .build();
+        String cnpjEnviado = empresaDtoRetornada.get(0).getCnpj();
 
         // when | execução
-        when(service.findAll()).thenReturn(Collections.singletonList(empresaDtoEncontrada));
+        when(service.pesquisar(pageable, "", cnpjEnviado, "")).thenReturn(empresaDtoRetornada);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .get(EMPRESA_API_URI)
+                .get(EMPRESA_API_URI + "/?cnpj=" + cnpjEnviado)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
         ResultActions perform = mockMvc.perform(request);
 
         // then | verificação
         perform
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(empresaDtoEncontrada.getId().toString()))
-                .andExpect(jsonPath("$[0].cnpj").value(empresaDtoEncontrada.getCnpj()))
-                .andExpect(jsonPath("$[0].nome").value(empresaDtoEncontrada.getNome()));
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+        assertThat(retornoListaParaString(perform.andReturn()))
+                .isEqualTo(listaParaStringIso(empresaDtoRetornada));
     }
 
     @Test
-    @DisplayName("Deve excluir empresa com sucesso.")
-    void excluirEmpresaTest() throws Exception {
+    @DisplayName("Deve tentar pesquisar empresa por nome e retornar 200 com dados iguais")
+    void pesquisarEmpresaPorNomeTest() throws Exception {
 
         // given | cenário
-        long idEnviado = new Random().nextLong();
+        String nomeEnviado = empresaDtoRetornada.get(0).getNome().split(" ")[0];
 
         // when | execução
-        doNothing().when(service).delete(idEnviado);
+        when(service.pesquisar(pageable, "", "", nomeEnviado)).thenReturn(empresaDtoRetornada);
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .delete(EMPRESA_API_URI + "/" + idEnviado)
+                .get(EMPRESA_API_URI + "/?nome=" + nomeEnviado)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
         ResultActions perform = mockMvc.perform(request);
 
         // then | verificação
         perform
-                .andExpect(status().isNoContent());
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+        assertThat(retornoListaParaString(perform.andReturn()))
+                .isEqualTo(listaParaStringIso(empresaDtoRetornada));
     }
 
     @Test
-    @DisplayName("Deve atualizar uma empresa com sucesso.")
+    @DisplayName("Deve tentar atualizar empresa com sucesso e retornar 200 com dados iguais")
     void atualizarEmpresaTest() throws Exception {
 
         // given | cenário
-        Long id = new Random().nextLong();
-
-        EmpresaDto empresaDtoEnviada = EmpresaDto.builder()
-                .id(id)
-                .cnpj("38.067.491/0001-60")
-                .nome("Bruno e Oliver Contábil ME")
-                .produtos(1)
-                .coberturas(2)
-                .build();
-        String json = new ObjectMapper().writeValueAsString(empresaDtoEnviada);
-
-        EmpresaDto empresaDtoAtualizada = EmpresaDto.builder()
-                .id(id)
-                .cnpj("38.067.491/0001-60")
-                .nome("Bruno e Oliver Contábil ME")
-                .produtos(1)
-                .coberturas(2)
-                .build();
+        String json = new ObjectMapper().writeValueAsString(empresaDtoRetornada.get(0));
 
         // when | execução
-        when(service.updateById(id, empresaDtoEnviada)).thenReturn(empresaDtoAtualizada);
+        when(service.atualizar(empresaDtoRetornada.get(0))).thenReturn(empresaDtoRetornada.get(0));
         MockHttpServletRequestBuilder request = MockMvcRequestBuilders
-                .put(EMPRESA_API_URI + "/" + empresaDtoEnviada.getId())
+                .put(EMPRESA_API_URI)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(json);
@@ -183,9 +170,27 @@ class EmpresaControllerTest {
 
         // then | verificação
         perform
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("id").value(empresaDtoEnviada.getId()))
-                .andExpect(jsonPath("cnpj").value(empresaDtoEnviada.getCnpj()))
-                .andExpect(jsonPath("nome").value(empresaDtoEnviada.getNome()));
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk());
+        assertThat(retornoItemParaString(perform.andReturn()))
+                .isEqualTo(itemParaStringIso(empresaDtoRetornada.get(0)));
+    }
+
+    private String retornoListaParaString(MvcResult retorno) throws UnsupportedEncodingException, JsonProcessingException {
+        EmpresaDto[] response = objectMapper.readValue(retorno.getResponse().getContentAsString(), EmpresaDto[].class);
+        return Arrays.asList(response).toString();
+    }
+
+    private String retornoItemParaString(MvcResult retorno) throws UnsupportedEncodingException, JsonProcessingException {
+        EmpresaDto response = objectMapper.readValue(retorno.getResponse().getContentAsString(), EmpresaDto.class);
+        return response.toString();
+    }
+
+    private String listaParaStringIso(List<EmpresaDto> lista) {
+        return new String(lista.toString().getBytes(), StandardCharsets.ISO_8859_1);
+    }
+
+    private String itemParaStringIso(EmpresaDto item) {
+        return new String(item.toString().getBytes(), StandardCharsets.ISO_8859_1);
     }
 }

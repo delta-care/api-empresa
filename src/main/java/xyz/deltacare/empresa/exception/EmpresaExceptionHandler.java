@@ -12,7 +12,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import xyz.deltacare.empresa.dto.ExceptionDto;
 
 import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,14 +19,6 @@ import java.util.List;
 
 @ControllerAdvice
 public class EmpresaExceptionHandler extends ResponseEntityExceptionHandler {
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Object> handleEntityNotFoundException(EntityNotFoundException exception) {
-        return buildResponseEntity(
-                HttpStatus.NOT_FOUND,
-                exception.getMessage(),
-                Collections.singletonList(exception.getMessage()));
-    }
 
     @ExceptionHandler(EntityExistsException.class)
     public ResponseEntity<Object> handleEntityExistsException(EntityExistsException exception) {
