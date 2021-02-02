@@ -69,6 +69,7 @@ podTemplate(
         stage('Deploy DEV') {
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
+                sh "helm uninstall ${APP_NAME} --namespace ${K8S_NAMESPACE}"
                 sh "helm upgrade ${APP_NAME} ./helm --install --namespace ${K8S_NAMESPACE} --set app.profile=${APP_PROFILE} --set image.tag=${APP_VERSION} --set k8s.namespace=${K8S_NAMESPACE}"
                 sh "helm repo add deltacare ${URL_REPO_CHART}"
                 sh "helm plugin install ${URL_REPO_HPUSH}"
