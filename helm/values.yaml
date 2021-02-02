@@ -2,8 +2,6 @@
 app:
   name: api-empresa
   profile:
-  health:
-    path: /actuator/health
 k8s:
   namespace:
 image:
