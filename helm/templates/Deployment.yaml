@@ -21,17 +21,9 @@ spec:
       containers:
       - name: {{.Values.app.name}}
         image: {{.Values.image.repository}}:{{.Values.image.tag}}
-        env:
-          - name: SPRING_PROFILES_ACTIVE
-            value: {{.Values.app.profile}}
         ports:
           - containerPort: {{.Values.service.port}}
             protocol: TCP
-        livenessProbe:
-          httpGet:
-            path: {{.Values.app.health.path}}
-            port: {{.Values.service.port}}
-        readinessProbe:
-          httpGet:
-            path: {{.Values.app.health.path}}
-            port: {{.Values.service.port}}
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: {{.Values.app.profile}}
