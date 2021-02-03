@@ -2,6 +2,7 @@ package xyz.deltacare.empresa.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,7 +34,7 @@ public class EmpresaServiceSpa implements EmpresaService {
     }
 
     @Override
-    @Cacheable(value="empresa", key="#root.args")
+    //@Cacheable(value="empresa", key="#root.args")
     public List<EmpresaDto> pesquisar(Pageable pageable, String id, String cnpj, String nome) {
         return repository.findAll(pageable, id, cnpj, nome)
                 .stream()
@@ -42,6 +43,7 @@ public class EmpresaServiceSpa implements EmpresaService {
     }
 
     @Override
+    //@CacheEvict(value="empresa", allEntries = true)
     public EmpresaDto atualizar(EmpresaDto empresaDto) {
         return salvar(empresaDto);
     }
@@ -49,12 +51,12 @@ public class EmpresaServiceSpa implements EmpresaService {
     @Transactional
     protected EmpresaDto salvar(EmpresaDto empresaDto) {
         Empresa empresa = mapper.toModel(empresaDto);
-        Empresa empresaCriada = repository.save(empresa);
+        Empresa empresaSalva = repository.save(empresa);
 
-        salvarBeneficiarios(empresaCriada);
-        salvarProdutos(empresaCriada);
+        salvarBeneficiarios(empresa);
+        salvarProdutos(empresa);
 
-        return mapper.toDto(empresaCriada);
+        return mapper.toDto(empresaSalva);
     }
 
     private void salvarBeneficiarios(Empresa empresa) {

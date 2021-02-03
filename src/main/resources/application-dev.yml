@@ -1,5 +1,3 @@
-server:
-  port: 8080
 spring:
   datasource:
     url: jdbc:mysql://empresa-dev.cacvwucgqxal.us-east-2.rds.amazonaws.com/empresa
@@ -7,7 +5,7 @@ spring:
     password: admin123
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      max-lifetime: 600000
+      max-lifetime: 500000
   flyway:
     enabled: true
     url: jdbc:mysql://empresa-dev.cacvwucgqxal.us-east-2.rds.amazonaws.com
@@ -36,11 +34,14 @@ logging:
   level:
     root: INFO
 
-management:
-  metrics:
-    enable:
-      root: true
-  endpoints:
-    web:
-      exposure:
-        include: info, health, metrics
+#management:
+#  metrics:
+#    enable:
+#      root: true
+#  endpoints:
+#    web:
+#      exposure:
+#        include: info, health, metrics
+#      cors:
+#        allowed-origins: http://localhost:8081
+#        allowed-methods: GET,POST,PUT,OPTIONS
