@@ -34,7 +34,7 @@ public class EmpresaServiceSpa implements EmpresaService {
     }
 
     @Override
-    //@Cacheable(value="empresa", key="#root.args")
+    @Cacheable(value="empresa", key="#root.args")
     public List<EmpresaDto> pesquisar(Pageable pageable, String id, String cnpj, String nome) {
         return repository.findAll(pageable, id, cnpj, nome)
                 .stream()
@@ -43,7 +43,7 @@ public class EmpresaServiceSpa implements EmpresaService {
     }
 
     @Override
-    //@CacheEvict(value="empresa", allEntries = true)
+    @CacheEvict(value="empresa", allEntries = true)
     public EmpresaDto atualizar(EmpresaDto empresaDto) {
         return salvar(empresaDto);
     }
@@ -53,10 +53,11 @@ public class EmpresaServiceSpa implements EmpresaService {
         Empresa empresa = mapper.toModel(empresaDto);
         Empresa empresaSalva = repository.save(empresa);
 
+        empresa.setId(empresaSalva.getId());
         salvarBeneficiarios(empresa);
         salvarProdutos(empresa);
 
-        return mapper.toDto(empresaSalva);
+        return mapper.toDto(empresa);
     }
 
     private void salvarBeneficiarios(Empresa empresa) {
