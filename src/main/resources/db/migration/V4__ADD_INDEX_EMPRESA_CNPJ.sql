@@ -1,0 +1,1 @@
+ALTER TABLE empresa ADD INDEX empresa_cnpj_idx (cnpj);

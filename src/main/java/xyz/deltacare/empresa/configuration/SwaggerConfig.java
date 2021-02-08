@@ -24,7 +24,7 @@ public class SwaggerConfig {
     private static final String API_VERSION = "0.1.0";
     private static final String CONTACT_NAME = "David Carvalho";
     private static final String CONTACT_GITHUB = "https://github.com/delta-care/api-empresa";
-    private static final String CONTACT_EMAIL = "jdavidsilv@gmail.com";
+    private static final String CONTACT_EMAIL = "";
 
     @Bean
     public Docket api() {

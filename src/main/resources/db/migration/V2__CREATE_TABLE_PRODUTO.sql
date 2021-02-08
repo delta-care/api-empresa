@@ -8,4 +8,4 @@ CREATE TABLE produto
     empresa_id           INTEGER NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (empresa_id) REFERENCES empresa(id)
-) ENGINE=InnoDB;
+) ENGINE=InnoDB AUTO_INCREMENT=237832;

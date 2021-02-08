@@ -1,0 +1,1 @@
+ALTER TABLE empresa ADD INDEX empresa_nome_idx (nome);
