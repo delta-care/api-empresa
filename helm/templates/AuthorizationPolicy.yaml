@@ -8,8 +8,12 @@ spec:
       app: {{.Values.app.name}}
   action: ALLOW
   rules:
-  - from:
-    when:
-    - key: request.auth.presenter
-      values: 
-        - deltacare
+    - when:
+      - key: request.auth.presenter
+        values:
+          - deltacare
+    - from:
+      - source:
+          namespaces:
+            - dev
+            - prd
