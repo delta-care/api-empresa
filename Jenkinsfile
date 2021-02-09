@@ -38,7 +38,7 @@ podTemplate(
                 sh 'mvn clean package -D skipTests=true'
             }
         }
-        
+        /*
         stage('Unit Test') {
             container('maven') {
                 sh 'mvn test'
@@ -55,7 +55,7 @@ podTemplate(
                 waitForQualityGate abortPipeline: true
             }
         }
-        
+        */
         stage('Release') {
             container('docker') {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
