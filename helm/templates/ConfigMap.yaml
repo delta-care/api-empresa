@@ -3,8 +3,41 @@ apiVersion: v1
 metadata:
   name: {{.Values.app.name}}
 data:
-  application-prd.yml: |-
+  application.yml: |-
     spring:
+      profiles: dev
+      datasource:
+        url: jdbc:mysql://empresa-dev.cacvwucgqxal.us-east-2.rds.amazonaws.com/empresa
+        username: admin
+        password: admin123
+      flyway:
+        url: jdbc:mysql://empresa-dev.cacvwucgqxal.us-east-2.rds.amazonaws.com
+        user: admin
+        password: admin123
+        schemas: fatura
+      jpa:
+        show-sql: true
+        properties:
+          hibernate:
+            format_sql: true
+      cache:
+        type: redis
+        redis:
+          time-to-live: 30000
+      redis:
+        host: 3.128.159.68
+        port: 6379
+        password:
+      servlet:
+        multipart:
+          max-file-size: 100MB
+          max-request-size: 100MB    
+    logging:
+      level:
+        root: INFO   
+    ---
+    spring:
+      profiles: prd
       datasource:
         url: jdbc:mysql://empresa-prd.cacvwucgqxal.us-east-2.rds.amazonaws.com/empresa
         username: admin
@@ -13,4 +46,24 @@ data:
         url: jdbc:mysql://empresa-prd.cacvwucgqxal.us-east-2.rds.amazonaws.com
         user: admin
         password: admin123
-        schemas: empresa
+        schemas: fatura
+      jpa:
+        show-sql: true
+        properties:
+          hibernate:
+            format_sql: false
+      cache:
+        type: redis
+        redis:
+          time-to-live: 30000
+      redis:
+        host: 3.128.159.68
+        port: 6379
+        password:
+      servlet:
+        multipart:
+          max-file-size: 100MB
+          max-request-size: 100MB  
+    logging:
+      level:
+        root: INFO          
