@@ -158,6 +158,7 @@
                     src/main/java/**/configuration/**,
                     src/main/java/**/domain/**,
                     src/main/java/**/dto/**,
+                    src/main/java/**/event/**,
                     src/main/java/**/mapper/**
                 </sonar.exclusions>
             </properties>
