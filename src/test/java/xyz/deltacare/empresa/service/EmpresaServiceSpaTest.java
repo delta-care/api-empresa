@@ -16,6 +16,7 @@ import xyz.deltacare.empresa.domain.Beneficiario;
 import xyz.deltacare.empresa.domain.Produto;
 import xyz.deltacare.empresa.dto.EmpresaDto;
 import xyz.deltacare.empresa.domain.Empresa;
+import xyz.deltacare.empresa.event.EventSender;
 import xyz.deltacare.empresa.mapper.EmpresaMapper;
 import xyz.deltacare.empresa.repository.BeneficiarioRepository;
 import xyz.deltacare.empresa.repository.EmpresaRepository;
@@ -39,6 +40,7 @@ class EmpresaServiceSpaTest {
     @Mock private EmpresaRepository empresaRepository;
     @Mock private ProdutoRepository produtoRepository;
     @Mock private BeneficiarioRepository beneficiarioRepository;
+    @Mock private EventSender eventSender;
 
     private Pageable pageable;
     private EmpresaDto empresaDtoEnviada;
@@ -72,6 +74,7 @@ class EmpresaServiceSpaTest {
         // setUp
 
         // when | execução
+        doNothing().when(eventSender).send(any(Beneficiario.class));
         when(produtoRepository.save(any(Produto.class))).thenReturn(produtoRetornado);
         when(beneficiarioRepository.save(any(Beneficiario.class))).thenReturn(beneficiarioRetornado);
         when(empresaRepository.save(any(Empresa.class))).thenReturn(empresaRetornada);
@@ -156,6 +159,7 @@ class EmpresaServiceSpaTest {
         // setUp
 
         // when | execução
+        doNothing().when(eventSender).send(any(Beneficiario.class));
         when(produtoRepository.save(any(Produto.class))).thenReturn(produtoRetornado);
         when(beneficiarioRepository.save(any(Beneficiario.class))).thenReturn(beneficiarioRetornado);
         when(empresaRepository.save(any(Empresa.class))).thenReturn(this.empresaRetornada);

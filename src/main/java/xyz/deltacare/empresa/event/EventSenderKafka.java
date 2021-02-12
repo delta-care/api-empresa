@@ -17,18 +17,18 @@ import java.util.Locale;
 
 @Service
 @Transactional
-public class KafkaSender {
+public class EventSenderKafka implements EventSender {
 
     public static final String HEADER_VALUE = "999";
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
 
-    public KafkaSender(ObjectMapper objectMapper, KafkaTemplate<String, String> kafkaTemplate) {
+    public EventSenderKafka(ObjectMapper objectMapper, KafkaTemplate<String, String> kafkaTemplate) {
         this.objectMapper = objectMapper;
         this.kafkaTemplate = kafkaTemplate;
     }
 
-    public void send(final Beneficiario beneficiario) {
+    public void send(Beneficiario beneficiario) {
 
         try {
             NovoBeneficiarioDto novoBeneficiarioDto = NovoBeneficiarioDto
