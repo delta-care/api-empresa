@@ -31,7 +31,18 @@ data:
       servlet:
         multipart:
           max-file-size: 100MB
-          max-request-size: 100MB    
+          max-request-size: 100MB
+      kafka:
+        bootstrap-servers: ec2-3-128-159-68.us-east-2.compute.amazonaws.com:9092
+        consumer:
+          group-id: painel
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          auto-offset-reset: earliest
+          enable-auto-commit: false
+        listener:
+          missing-topics-fatal: false
+          ack-mode: manual_immediate
     logging:
       level:
         root: INFO   
@@ -63,7 +74,18 @@ data:
       servlet:
         multipart:
           max-file-size: 100MB
-          max-request-size: 100MB  
+          max-request-size: 100MB
+      kafka:
+        bootstrap-servers: ec2-3-128-159-68.us-east-2.compute.amazonaws.com:9092
+        consumer:
+          group-id: painel
+          key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+          auto-offset-reset: earliest
+          enable-auto-commit: false
+        listener:
+          missing-topics-fatal: false
+          ack-mode: manual_immediate
     logging:
       level:
         root: INFO          

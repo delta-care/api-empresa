@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import xyz.deltacare.empresa.dto.EmpresaDto;
+import xyz.deltacare.empresa.event.KafkaSender;
 import xyz.deltacare.empresa.mapper.EmpresaMapper;
 import xyz.deltacare.empresa.domain.Empresa;
 import xyz.deltacare.empresa.repository.BeneficiarioRepository;
@@ -26,6 +27,7 @@ public class EmpresaServiceSpa implements EmpresaService {
     private final BeneficiarioRepository beneficiarioRepository;
     private final ProdutoRepository produtoRepository;
     private static final EmpresaMapper mapper = EmpresaMapper.INSTANCE;
+    private final KafkaSender kafkaSender;
 
     @Override
     public EmpresaDto criar(EmpresaDto empresaDto) {
@@ -64,6 +66,7 @@ public class EmpresaServiceSpa implements EmpresaService {
         empresa.getBeneficiarios().forEach(beneficiario -> {
             beneficiario.setEmpresa(empresa);
             beneficiarioRepository.save(beneficiario);
+            kafkaSender.send(beneficiario);
         });
     }
 
