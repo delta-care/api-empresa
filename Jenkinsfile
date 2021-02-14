@@ -85,7 +85,7 @@ podTemplate(
         }
     }
         
-    timeout(time: 20, unit: 'SECONDS') {
+    timeout(time: 20, unit: 'MINUTES') {
         input message: 'Efetuar o deploy em produção?', ok: 'Sim'
     }
  
