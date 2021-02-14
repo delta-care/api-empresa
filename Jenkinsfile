@@ -80,11 +80,14 @@ podTemplate(
                 sh "helm repo update"
             }
         }
+    }
         
-        timeout(time: 20, unit: 'SECONDS') {
-            input message: 'Efetuar o deploy em produção?', ok: 'Sim'
-        }
+    timeout(time: 20, unit: 'SECONDS') {
+        input message: 'Efetuar o deploy em produção?', ok: 'Sim'
+    }
  
+    node(LABEL_ID) {
+        
         stage('Release') {
             container('docker') {
                 withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_HUB_PASS', usernameVariable: 'DOCKER_HUB_USER')]) {
