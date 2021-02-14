@@ -1,4 +1,4 @@
-def LABEL_ID="deltacare-${UUID.randomUUID().toString().substring(0,'-')}"
+def LABEL_ID="deltacare-${UUID.randomUUID().toString().substring(0,url.indexOf('-'))}"
 
 podTemplate(
     name: 'deltacare',
