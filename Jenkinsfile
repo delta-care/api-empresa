@@ -1,9 +1,8 @@
-def UUID_RANDOM=UUID.randomUUID().toString();
-def LABEL_ID="deltacare-${UUID_RANDOM.substring(0,UUID_RANDOM.indexOf('-'))}"
+def LABEL_ID="deltacare-${UUID.randomUUID().toString()}"
 
 podTemplate(
     name: 'deltacare',
-    label: 'deltacare',
+    label: LABEL_ID,
     namespace: 'ops',
     cloud: 'kubernetes',
     containers: [
