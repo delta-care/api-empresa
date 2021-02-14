@@ -98,8 +98,8 @@ podTemplate(
             }
         }
         
-        def APP_PROFILE='prd'
-        def K8S_NAMESPACE='prd'
+        APP_PROFILE='prd'
+        K8S_NAMESPACE='prd'
         
         stage('Deploy PRD') {
             container('helm') {
