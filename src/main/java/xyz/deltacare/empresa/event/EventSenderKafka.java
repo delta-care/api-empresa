@@ -39,7 +39,7 @@ public class EventSenderKafka implements EventSender {
             String payload = objectMapper.writeValueAsString(novoBeneficiarioDto);
             Message<String> message = MessageBuilder
                     .withPayload(payload)
-                    .setHeader(KafkaHeaders.TOPIC, "novobeneficiario")
+                    .setHeader(KafkaHeaders.TOPIC, "beneficiario")
                     .setHeader(KafkaHeaders.MESSAGE_KEY, HEADER_VALUE)
                     .setHeader(KafkaHeaders.PARTITION_ID, 0)
                     .build();
