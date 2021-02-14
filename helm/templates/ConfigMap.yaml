@@ -39,12 +39,12 @@ data:
           value-serializer: org.apache.kafka.common.serialization.StringSerializer
           retries: 3
           client-id: painel-producer
-          transaction-id-prefix: painel
+          #transaction-id-prefix: painel
           properties:
             enable:
               idempotence: true
-            transactional:
-              id: painel
+            #transactional:
+              #id: painel
     logging:
       level:
         root: INFO   
