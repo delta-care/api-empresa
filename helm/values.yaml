@@ -1,4 +1,4 @@
-# app.profile, k8s.namespace e image.tag definidos via jenkins
+# app.profile, k8s.namespace, image.tag e ops.env definidos via jenkins
 app:
   name: api-empresa
   profile:
@@ -10,3 +10,5 @@ image:
 service:
   type: ClusterIP
   port: 8080
+ops:
+  env:
