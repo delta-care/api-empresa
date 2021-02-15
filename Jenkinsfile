@@ -42,7 +42,7 @@ podTemplate(
                 sh 'mvn clean package -D skipTests=true'
             }
         }
-        /*
+        
         stage('Unit Test') {
             container('maven') {
                 sh 'mvn test'
@@ -59,7 +59,6 @@ podTemplate(
                 waitForQualityGate abortPipeline: true
             }
         }
-        */
         
         APP_VERSION = APP_VERSION + '-rc'
         
