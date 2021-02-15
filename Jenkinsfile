@@ -27,6 +27,7 @@ podTemplate(
     def IMAGE_NAME_CHART="deltacare/${APP_NAME}"
     def K8S_NAMESPACE='dev'
     def OBJ_REPO_GIT
+    def ENV='DEV'
     
     node(LABEL_ID) {
         
@@ -76,7 +77,7 @@ podTemplate(
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
                 sh "helm uninstall ${APP_NAME} --namespace ${K8S_NAMESPACE}"
-                sh "helm upgrade ${APP_NAME} ./helm --install --namespace ${K8S_NAMESPACE} --set app.profile=${APP_PROFILE} --set image.tag=${APP_VERSION} --set k8s.namespace=${K8S_NAMESPACE}"
+                sh "helm upgrade ${APP_NAME} ./helm --install --namespace ${K8S_NAMESPACE} --set app.profile=${APP_PROFILE} --set image.tag=${APP_VERSION} --set k8s.namespace=${K8S_NAMESPACE} --set ops.env=${ENV}"
                 sh "helm repo add deltacare ${URL_REPO_CHART}"
                 sh "helm plugin install ${URL_REPO_HPUSH}"
                 sh "helm push helm/ deltacare"
@@ -111,6 +112,7 @@ podTemplate(
             }
         }
         
+        ENV='PRD'
         APP_PROFILE='prd'
         K8S_NAMESPACE='prd'
         
@@ -118,7 +120,7 @@ podTemplate(
             container('helm') {
                 sh "sed -i 's/^appVersion:.*\$/appVersion: ${APP_VERSION}/' ./helm/Chart.yaml"
                 sh "helm uninstall ${APP_NAME} --namespace ${K8S_NAMESPACE}"
-                sh "helm upgrade ${APP_NAME} ./helm --install --namespace ${K8S_NAMESPACE} --set app.profile=${APP_PROFILE} --set image.tag=${APP_VERSION} --set k8s.namespace=${K8S_NAMESPACE}"
+                sh "helm upgrade ${APP_NAME} ./helm --install --namespace ${K8S_NAMESPACE} --set app.profile=${APP_PROFILE} --set image.tag=${APP_VERSION} --set k8s.namespace=${K8S_NAMESPACE} --set ops.env=${ENV}"
                 sh "helm repo add deltacare ${URL_REPO_CHART}"
                 sh "helm plugin install ${URL_REPO_HPUSH}"
                 sh "helm push helm/ deltacare"
