@@ -55,7 +55,7 @@ data:
         url: jdbc:mysql://empresa-prd.cacvwucgqxal.us-east-2.rds.amazonaws.com
         user: admin
         password: admin123
-        schemas: fatura
+        schemas: empresa
       jpa:
         show-sql: true
         properties:
