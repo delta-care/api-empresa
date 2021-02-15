@@ -7,5 +7,5 @@ spec:
     matchLabels:
       app: {{.Values.app.name}}
   jwtRules:
-  - issuer: http://sso.deltacare.xyz/auth/realms/Deltacare
-    jwksUri: http://sso.deltacare.xyz/auth/realms/Deltacare/protocol/openid-connect/certs
+  - issuer: http://sso.deltacare.xyz/auth/realms/Deltacare-{{.Values.ops.env}}
+    jwksUri: http://sso.deltacare.xyz/auth/realms/Deltacare-{{.Values.ops.env}}/protocol/openid-connect/certs
