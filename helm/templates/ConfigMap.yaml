@@ -43,7 +43,9 @@ data:
               idempotence: true
     logging:
       level:
-        root: INFO   
+        root: INFO
+    app:
+      topic: novobeneficiariodev
     ---
     spring:
       profiles: prd
@@ -84,4 +86,6 @@ data:
               idempotence: true
     logging:
       level:
-        root: INFO          
+        root: INFO
+    app:
+      topic: novobeneficiarioprd

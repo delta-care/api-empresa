@@ -3,6 +3,7 @@ package xyz.deltacare.empresa.event;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.Message;
@@ -24,6 +25,7 @@ public class EventSenderKafka implements EventSender {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final ObjectMapper objectMapper;
     private final Logger logger = LoggerFactory.getLogger(EventSenderKafka.class);
+    @Value("${app.topic}") private String topic;
 
     public EventSenderKafka(ObjectMapper objectMapper, KafkaTemplate<String, String> kafkaTemplate) {
         this.objectMapper = objectMapper;
@@ -43,7 +45,7 @@ public class EventSenderKafka implements EventSender {
             logger.info("Enviando mensagem: " + payload);
             Message<String> message = MessageBuilder
                     .withPayload(payload)
-                    .setHeader(KafkaHeaders.TOPIC, "novobeneficiario")
+                    .setHeader(KafkaHeaders.TOPIC, topic)
                     .setHeader(KafkaHeaders.MESSAGE_KEY, HEADER_VALUE)
                     .setHeader(KafkaHeaders.PARTITION_ID, 0)
                     .build();
