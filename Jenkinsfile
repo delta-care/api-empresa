@@ -1,7 +1,7 @@
 def LABEL_ID="deltacare-${UUID.randomUUID().toString()}"
 
 podTemplate(
-    name: 'deltacare',
+    name: 'deltacares',
     label: LABEL_ID,
     namespace: 'ops',
     cloud: 'kubernetes',
